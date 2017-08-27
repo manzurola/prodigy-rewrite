@@ -3,8 +3,9 @@
  */
 import React, {Component} from "react";
 import {View, Animated, PanResponder, Dimensions, LayoutAnimation, UIManager, Text} from "react-native";
+import Feedback from "./Feedback";
 
-export default class Sentence extends Component {
+export default class Danger extends Feedback {
 
     render() {
         return (
@@ -21,7 +22,6 @@ const styles = {
         borderColor: "white",
     },
     text: {
-        color: "white",
-        fontFamily: "josefin-sans-light"
+        color: "white"
     },
 };

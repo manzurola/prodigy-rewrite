@@ -1,4 +1,4 @@
-const QUESTIONS = [
+const GameData = [
     {
         id: "0",
         sentence: "",
@@ -12,4 +12,4 @@ const QUESTIONS = [
     }
 ];
 
-export default QUESTIONS;
+export default GameData;

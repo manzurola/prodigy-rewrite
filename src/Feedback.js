@@ -4,7 +4,7 @@
 import React, {Component} from "react";
 import {View, Animated, PanResponder, Dimensions, LayoutAnimation, UIManager, Text} from "react-native";
 
-export default class Sentence extends Component {
+export default class Feedback extends Component {
 
     render() {
         return (
@@ -21,7 +21,6 @@ const styles = {
         borderColor: "white",
     },
     text: {
-        color: "white",
-        fontFamily: "josefin-sans-light"
+        color: "white"
     },
 };

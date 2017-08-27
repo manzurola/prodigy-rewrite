@@ -1,7 +1,6 @@
 /**
  * Created by guym on 20/08/2017.
  */
-import ProgressBar from "./ProgressBar";
 import React, {Component} from "react";
 import {
     AppRegistry,
@@ -15,6 +14,14 @@ import {
     TouchableHighlight,
     TouchableWithoutFeedback
 } from "react-native";
+
+import ProgressBar from "./ProgressBar";
+import Sentence from "./Sentence";
+import ChoiceList from "./ChoiceList";
+import Answer from "./Answer";
+import Danger from "./Danger";
+import Combo from "./Combo";
+import Feedback from "./Feedback";
 
 export default class Game extends Component {
 
@@ -32,10 +39,10 @@ export default class Game extends Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.container}>
                 <ProgressBar progress={this.state.progress}/>
                 <Sentence text={this.getCurrentQuestion().sentence}/>
-                <Answer choices={this.state.answer}/>
+                <Answer this.words={this.state.answer} instructions={this.state.instructions}/>
                 {this.getFeedback()}
                 {this.getChoices()}
             </View>
@@ -110,3 +117,9 @@ export default class Game extends Component {
         return this.props.questions[this.state.questionIndex];
     }
 }
+
+const styles = {
+    container: {
+        backgroundColor: "#363636"
+    }
+};
