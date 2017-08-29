@@ -18,7 +18,6 @@ import {
 import ProgressBar from "./ProgressBar";
 import Sentence from "./Sentence";
 import Answer from "./Answer";
-import Feedback from "./Feedback";
 import ChoiceList from "./ChoiceList";
 import Danger from "./Danger";
 import Combo from "./Combo";
@@ -58,7 +57,12 @@ export default class Game extends Component {
                     flex: 5,
                     padding: 10,
                 }}>
-                    <Answer words={this.state.answer} instructions={this.getCurrentQuestion().instructions}/>
+                    <Answer answer={this.getCurrentQuestion().answer}
+                            input={this.state.answer}
+                            instructions={this.getCurrentQuestion().instructions}
+                            onPress={() => this.deleteLastChoice()}
+                            onComplete={(result) => this.onAnswerComplete(result)}
+                    />
                 </View>
                 <View style={{
                     flex: 2,
@@ -86,20 +90,37 @@ export default class Game extends Component {
             <ChoiceList
                 choices={this.getCurrentQuestion().choices}
                 answerKey={this.getCurrentQuestion().answerKey}
-                onNewChoice={() => {
+                onNewChoices={() => {
                     this.onNewChoices();
                 }}
                 onNoMoreChoices={ () => {
                     this.onNoMoreChoices();
                 }}
-                onCorrectChoice={(choice) => {
-                    this.onCorrectChoice(choice);
-                }}
-                onIncorrectChoice={(choice) => {
-                    this.onIncorrectChoice(choice);
+                onChoice={(choice) => {
+                    this.onChoice(choice);
                 }}
             />
         )
+    }
+
+    onChoice(choice) {
+
+        let newAnswer = this.state.answer.slice();
+        newAnswer.push(choice);
+
+        this.setState({
+            answer: newAnswer
+        })
+    }
+
+    deleteLastChoice() {
+        console.log("deleteLastChoice");
+        let newAnswer = this.state.answer.slice();
+        let popped = newAnswer.pop();
+        console.log("deleting last word in answer [" + popped + " ]");
+        this.setState({
+            answer: newAnswer
+        })
     }
 
     onCorrectChoice(choice) {
@@ -171,6 +192,11 @@ export default class Game extends Component {
 
     getCurrentQuestion() {
         return this.props.data[this.state.questionIndex];
+    }
+
+    onAnswerComplete(result) {
+        console.log("Game - onAnswerComplete");
+        console.log(result);
     }
 }
 

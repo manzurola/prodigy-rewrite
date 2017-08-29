@@ -2,11 +2,11 @@ const GameData = [
     {
         id: "0",
         sentence: "Dogs live.)",
-        answerKey: [0, 0, 1],
+        answer: ["a", "dog", "lives"],
         choices: [
-            ["a", "dog", "life"],
-            ["an", "dogs", "lives"],
-            ["the", "dog's", "dog"]
+            ["a"],
+            ["dog"],
+            ["lives"]
         ],
         instructions: "Put into the singular"
     }

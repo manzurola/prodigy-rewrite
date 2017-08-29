@@ -25,7 +25,7 @@ export default class ChoiceList extends Component {
 
     render() {
         return (
-            <View style={styles.choiceListContainer}>
+            <View style={styles.choiceListContainer} onPress={()=>this.onPress()}>
                 {this.getChoices()}
             </View>
         )
@@ -33,63 +33,55 @@ export default class ChoiceList extends Component {
 
     onChoice(word) {
         this.setState({
-            index: this.index < this.props.answerKey.length ? this.index + 1 : this.index
+            index: this.index + 1
         });
-        if (word.isCorrect) this.onCorrectChoice(word.text);
-        else this.onIncorrectChoice(word.text);
+        this.props.onChoice(word);
     }
 
-    onCorrectChoice(word) {
-        this.props.onCorrectChoice(word);
-    }
-
-    onIncorrectChoice(word) {
-        this.props.onIncorrectChoice(word);
+    onPress() {
+        console.log("onPress of Answer");
+        this.props.onPress();
     }
 
     getChoices() {
         let choices = [];
         for (let row = 0; row < this.props.choices.length; row++) {
-            let wordsPerChoiceButton = [];
-            for (let column = 0; column < this.props.answerKey.length; column++) {
-                const wordText = this.props.choices[row][column];
-                wordsPerChoiceButton.push({
-                    text: wordText,
-                    isCorrect: this.props.answerKey[column] === row
-                });
-            }
-            choices.push(<Choice id={row}
-                                 words={wordsPerChoiceButton}
+            choices.push(<Choice key={row}
                                  index={this.state.index}
+                                 words={this.props.choices[row]}
                                  onPress={(data) => this.onChoice(data)}/>)
         }
         return choices;
     }
 }
 
-// when a correct choice switches words, it flickers green
 class Choice extends Component {
+
     constructor(props) {
-        super(props); // props contain words: {text:, isCorrect:}...
+        super(props);
         this.state = {
             index: 0
-        }
+        };
     }
 
     render() {
         return (
             <TouchableHighlight style={styles.choiceContainer} onPress={(event) => this.onPress(event)}>
-                <Text style={styles.choiceText}>{this.getWord().text}</Text>
+                <Text style={styles.choiceText}>{this.getWord()}</Text>
             </TouchableHighlight>
         )
     }
 
     onPress(event) {
-        console.log("onPress of [" + this.getWord().isCorrect + "] choice: [" + this.getWord().text + "]");
+        console.log("onPress of choice: [" + this.getWord() + "]");
+        this.setState({
+            index: this.state.index + 1
+        });
         this.props.onPress(this.getWord());
     }
 
     getWord() {
+        console.log("Choice - getWord");
         return this.props.words[this.state.index];
     }
 }
