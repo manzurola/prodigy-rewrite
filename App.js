@@ -1,6 +1,9 @@
 import React from "react";
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View, StatusBar} from "react-native";
+import { Font } from 'expo';
+
 import GameData from "./src/GameData";
+import Game from "./src/Game";
 
 export default class App extends React.Component {
 
@@ -11,6 +14,9 @@ export default class App extends React.Component {
     async componentDidMount() {
         await Font.loadAsync({
             'josefin-sans-light': require('./assets/fonts/Josefin_Sans/JosefinSans-Light.ttf'),
+            'josefin-sans-light-italic': require('./assets/fonts/Josefin_Sans/JosefinSans-LightItalic.ttf'),
+            'josefin-sans-bold': require('./assets/fonts/Josefin_Sans/JosefinSans-Bold.ttf'),
+
             'cagliostro-regular': require('./assets/fonts/Cagliostro/Cagliostro-Regular.ttf')
         });
 
@@ -20,6 +26,7 @@ export default class App extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar hidden={true} />
                 {
                     this.state.fontLoaded ? (<Game data={GameData}/>) : null
                 }
@@ -32,7 +39,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
 });

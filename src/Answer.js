@@ -16,13 +16,16 @@ export default class Answer extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.words.length <= this.props.words.length) return;
+    componentWillReceiveProps(props) {
+        if (props.words.length <= this.props.words.length) return;
 
-        let newTexts = nextProps.words.filter((e, i) => {
-            return i >= this.state.oldWords.words.length
+        let newTexts = props.words.filter((e, i) => {
+            return i >= this.state.oldWords.length
         });
         let oldTexts = this.state.oldWords.concat(this.state.newWords);
+
+        console.log("Answer - newTexts - " + newTexts.toString());
+        console.log("Answer - oldTexts - " + oldTexts.toString());
 
         this.setState({
             oldWords: oldTexts,
@@ -46,9 +49,7 @@ export default class Answer extends Component {
 
     getBody() {
         //show instructions if no words entered
-        if (this.state.isEmpty) return <Text>{this.props.instructions}</Text>
-
-        // show complete answer if
+        if (this.state.isEmpty) return <Text style={styles.instructionText}>{this.props.instructions}</Text>;
 
         let oldTexts = [];
         let newTexts = [];
@@ -70,16 +71,32 @@ export default class Answer extends Component {
 
 const styles = {
     container: {
-        borderWidth: 3,
-        borderColor: "white",
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0)',
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.25)",
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     newText: {
-        color: "white"
+        fontSize: 30,
+        color: "white",
+        fontFamily: "josefin-sans-bold",
+        textAlign: "center",
+        fontWeight: "bold",
     },
     oldText: {
-        color: "white"
+        fontSize: 30,
+        color: "white",
+        fontFamily: "josefin-sans-light",
+        textAlign: "center"
     },
     instructionText: {
-        color: "white"
+        fontSize: 20,
+        fontStyle: 'italic',
+        color: "white",
+        fontFamily: "josefin-sans-light-italic",
+        textAlign: "center"
     }
 };

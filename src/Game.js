@@ -12,16 +12,19 @@ import {
     ScrollView,
     ListView,
     TouchableHighlight,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Dimensions
 } from "react-native";
-
 import ProgressBar from "./ProgressBar";
 import Sentence from "./Sentence";
-import ChoiceList from "./ChoiceList";
 import Answer from "./Answer";
+import Feedback from "./Feedback";
+import ChoiceList from "./ChoiceList";
 import Danger from "./Danger";
 import Combo from "./Combo";
-import Feedback from "./Feedback";
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export default class Game extends Component {
 
@@ -33,18 +36,42 @@ export default class Game extends Component {
             score: 0,
             progress: 0,
             combo: 0,
-            isInDanger: false,
+            isInDanger: false
         }
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <ProgressBar progress={this.state.progress}/>
-                <Sentence text={this.getCurrentQuestion().sentence}/>
-                <Answer this.words={this.state.answer} instructions={this.state.instructions}/>
-                {this.getFeedback()}
-                {this.getChoices()}
+                <View style={{
+                    flex: 1.5,
+                }}>
+                    <ProgressBar progress={this.state.progress}/>
+                </View>
+                <View style={{
+                    flex: 5,
+                    padding: 10,
+                }}>
+                    <Sentence text={this.getCurrentQuestion().sentence}/>
+                </View>
+                <View style={{
+                    flex: 5,
+                    padding: 10,
+                }}>
+                    <Answer words={this.state.answer} instructions={this.getCurrentQuestion().instructions}/>
+                </View>
+                <View style={{
+                    flex: 2,
+                    padding: 10,
+                }}>
+                    {this.getFeedback()}
+                </View>
+                <View style={{
+                    flex: 7,
+                    padding: 10,
+                }}>
+                    {this.getChoices()}
+                </View>
             </View>
         )
     }
@@ -76,25 +103,46 @@ export default class Game extends Component {
     }
 
     onCorrectChoice(choice) {
-        console.log("Game - correct choice" + choice);
+        console.log("Game - correct choice " + choice);
+
+        let outOfDanger = false;
+        let combo = 0;
+        if (this.state.isInDanger) {
+            outOfDanger = true;
+            combo = 0;
+        } else {
+            combo++;
+        }
+
+        let newAnswer = this.state.answer.slice();
+        newAnswer.push(choice);
+
         this.setState({
-            combo: this.state.combo + 1
+            combo: combo,
+            isInDanger: !outOfDanger,
+            answer: newAnswer
         });
+
+        if (outOfDanger) this.onSafe();
     }
 
     onIncorrectChoice(choice) {
-        console.log("Game - incorrect choice" + choice);
+        console.log("Game - incorrect choice " + choice);
         let newCombo = 0;
         let comboLost = false;
+        let isInDanger = false;
         if (this.state.combo > 0) {
             newCombo = this.state.combo - 1;
             comboLost = true;
+        } else {
+            isInDanger = false;
         }
         this.setState({
             isInDanger: !comboLost,
             combo: newCombo,
         });
         if (comboLost) this.onComboLost();
+        if (isInDanger) this.onDanger();
     }
 
     onNewChoices() {
@@ -109,17 +157,26 @@ export default class Game extends Component {
         console.log("Game - combo lost");
     }
 
+    onDanger() {
+        console.log("Game - danger");
+    }
+
+    onSafe() {
+        console.log("Game - safe (out of danger)");
+    }
+
     gameOver() {
 
     }
 
     getCurrentQuestion() {
-        return this.props.questions[this.state.questionIndex];
+        return this.props.data[this.state.questionIndex];
     }
 }
 
 const styles = {
     container: {
-        backgroundColor: "#363636"
+        flex: 1,
+        backgroundColor: "#363636",
     }
 };

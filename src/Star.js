@@ -3,22 +3,17 @@
  */
 import React, {Component} from "react";
 import {View, Animated, PanResponder, Dimensions, LayoutAnimation, UIManager, Text} from "react-native";
-import Star from "./Star";
+import { FontAwesome } from '@expo/vector-icons';
 
-export default class ProgressBar extends Component {
+export default class Star extends Component {
 
     constructor(props) {
         super(props);
     }
 
     render() {
-        const childFlex = this.props.progress / 100;
-        const dummyFlex = 1 - childFlex;
         return (
-            <View style={styles.container}>
-                <View style={[styles.child, {flex: childFlex}]}/><View style={{flex: dummyFlex}}/>
-                <Star/>
-            </View>
+            <FontAwesome name="star" size={32} color="#FFFF00" />
         )
     }
 }
