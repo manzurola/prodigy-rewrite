@@ -12,7 +12,9 @@ export default class Sentence extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.text}>{this.props.text}</Text>
+                <View style={styles.textContainer}>
+                    <Text style={styles.text}>{this.props.text}</Text>
+                </View>
             </View>
         )
     }
@@ -20,18 +22,34 @@ export default class Sentence extends Component {
 
 const styles = {
     container: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0)',
-        borderWidth: 1,
-        borderColor: "rgba(255,255,255,0.25)",
-        borderRadius: 5,
-        alignItems: 'center',
+        // height: 50,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        margin:10,
+    },
+    textContainer: {
+        maxWidth: 400,
         justifyContent: 'center',
+        alignItems: 'flex-start',
+        backgroundColor: '#B2B2B2',
+        borderRadius: 5,
+        marginLeft: 20,
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 1,
+            height: 1
+        },
+        shadowRadius: 3,
+        shadowOpacity: 0.5,
+        padding: 20,
     },
     text: {
-        color: "white",
-        fontFamily: "josefin-sans-light",
-        fontSize: 30,
-        textAlign: "center"
+        color: "#434343",
+        fontFamily: "josefin-sans-bold",
+        fontSize: 20,
+        textAlign: "left",
+        // paddingTop: 10,
+        // paddingBottom: 10,
+        // paddingLeft: 20,
     }
 };

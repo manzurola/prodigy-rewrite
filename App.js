@@ -15,7 +15,8 @@ export default class App extends React.Component {
         await Font.loadAsync({
             'josefin-sans-light': require('./assets/fonts/Josefin_Sans/JosefinSans-Light.ttf'),
             'josefin-sans-light-italic': require('./assets/fonts/Josefin_Sans/JosefinSans-LightItalic.ttf'),
-            'josefin-sans-bold': require('./assets/fonts/Josefin_Sans/JosefinSans-Bold.ttf'),
+            'josefin-sans-bold': require('./assets/fonts/Josefin_Sans/JosefinSans-SemiBold.ttf'),
+            'josefin-sans-bold-italic': require('./assets/fonts/Josefin_Sans/JosefinSans-SemiBoldItalic.ttf'),
 
             'cagliostro-regular': require('./assets/fonts/Cagliostro/Cagliostro-Regular.ttf')
         });

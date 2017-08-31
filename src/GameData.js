@@ -4,7 +4,7 @@ const GameData = [
         sentence: "Dogs live.)",
         answer: ["a", "dog", "lives"],
         choices: [
-            ["a"],
+            ["a","what"],
             ["dog"],
             ["lives"]
         ],

@@ -18,24 +18,36 @@ import {
 export default class ChoiceList extends Component {
     constructor(props) {
         super(props);
+
+        let choiceIndices = [];
+        for (let i = 0; i < this.props.choices.length; i++) {
+            choiceIndices.push(0);
+        }
+
         this.state = {
-            index: 0
+            index: 0,
+            choiceIndices: choiceIndices
         };
     }
 
     render() {
         return (
-            <View style={styles.choiceListContainer} onPress={()=>this.onPress()}>
+            <View style={styles.choiceListContainer} onPress={() => this.onPress()}>
                 {this.getChoices()}
             </View>
         )
     }
 
-    onChoice(word) {
+    onChoice(index) {
+        console.log("ChoiceList - onChoice " + index);
+        let newChoiceIndices = this.state.choiceIndices.slice();
+        const choiceIndex = newChoiceIndices[index];
+        newChoiceIndices[index]++;
         this.setState({
-            index: this.index + 1
+            choiceIndices: newChoiceIndices
+        }, () => {
+            this.props.onChoice(this.props.choices[index][choiceIndex])
         });
-        this.props.onChoice(word);
     }
 
     onPress() {
@@ -45,11 +57,12 @@ export default class ChoiceList extends Component {
 
     getChoices() {
         let choices = [];
-        for (let row = 0; row < this.props.choices.length; row++) {
-            choices.push(<Choice key={row}
-                                 index={this.state.index}
-                                 words={this.props.choices[row]}
-                                 onPress={(data) => this.onChoice(data)}/>)
+        for (let i = 0; i < this.props.choices.length; i++) {
+            let text = this.props.choices[i][this.state.choiceIndices[i]];
+            console.log("creating choice with word " + text);
+            choices.push(<Choice key={i}
+                                 text={text}
+                                 onPress={() => this.onChoice(i)}/>)
         }
         return choices;
     }
@@ -57,53 +70,50 @@ export default class ChoiceList extends Component {
 
 class Choice extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            index: 0
-        };
-    }
-
     render() {
         return (
             <TouchableHighlight style={styles.choiceContainer} onPress={(event) => this.onPress(event)}>
-                <Text style={styles.choiceText}>{this.getWord()}</Text>
+                <Text style={styles.choiceText}>{this.props.text}</Text>
             </TouchableHighlight>
         )
     }
 
-    onPress(event) {
-        console.log("onPress of choice: [" + this.getWord() + "]");
-        this.setState({
-            index: this.state.index + 1
-        });
-        this.props.onPress(this.getWord());
+    onPress() {
+        console.log("onPress of choice: [" + this.props.text + "]");
+        this.props.onPress();
     }
 
-    getWord() {
-        console.log("Choice - getWord");
-        return this.props.words[this.state.index];
-    }
 }
 
 const styles = {
     choiceListContainer: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     choiceContainer: {
-        flex: 1,
-        margin: 10,
-        borderWidth: 3,
-        borderRadius: 30,
-        borderColor: 'white',
-        alignItems: 'center',
+        // flex: 1,
+        margin: 5,
+        width: 230,
+        height: 50,
+        borderRadius: 20,
+        // alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'rgba(0,0,0,0)',
+        backgroundColor: '#434343',
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 1,
+            height: 1
+        },
+        shadowRadius: 3,
+        shadowOpacity: 0.5
     },
     choiceText: {
-        fontSize: 24,
-        color: "white",
+        fontSize: 20,
+        color: "#E3E3E3",
+        paddingLeft: 50,
+        backgroundColor: 'rgba(0,0,0,0)',
         fontFamily: "josefin-sans-bold",
-        textAlign: "center"
+        textAlign: "left"
     }
 };

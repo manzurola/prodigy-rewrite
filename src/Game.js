@@ -13,7 +13,9 @@ import {
     ListView,
     TouchableHighlight,
     TouchableWithoutFeedback,
-    Dimensions
+    Dimensions,
+    LayoutAnimation,
+    UIManager
 } from "react-native";
 import ProgressBar from "./ProgressBar";
 import Sentence from "./Sentence";
@@ -39,6 +41,12 @@ export default class Game extends Component {
         }
     }
 
+    componentWillUpdate() {
+        UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+        LayoutAnimation.spring();
+        // LayoutAnimation.configureNext(CustomLayoutSpring);
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -48,31 +56,28 @@ export default class Game extends Component {
                     <ProgressBar progress={this.state.progress}/>
                 </View>
                 <View style={{
-                    flex: 5,
+                    flex: 7,
+                    flexDirection: 'column',
                     padding: 10,
+                    justifyContent: 'flex-end',
+                    alignItems: 'stretch'
                 }}>
                     <Sentence text={this.getCurrentQuestion().sentence}/>
-                </View>
-                <View style={{
-                    flex: 5,
-                    padding: 10,
-                }}>
                     <Answer answer={this.getCurrentQuestion().answer}
                             input={this.state.answer}
                             instructions={this.getCurrentQuestion().instructions}
-                            onPress={() => this.deleteLastChoice()}
+                            onPress={() => this.undoLastChoice()}
                             onComplete={(result) => this.onAnswerComplete(result)}
                     />
                 </View>
                 <View style={{
-                    flex: 2,
-                    padding: 10,
+                    flex: 0,
                 }}>
                     {this.getFeedback()}
                 </View>
                 <View style={{
-                    flex: 7,
-                    padding: 10,
+                    flex: 5,
+
                 }}>
                     {this.getChoices()}
                 </View>
@@ -108,13 +113,15 @@ export default class Game extends Component {
         let newAnswer = this.state.answer.slice();
         newAnswer.push(choice);
 
+        console.log("new answer: " + newAnswer.toString());
+
         this.setState({
             answer: newAnswer
         })
     }
 
-    deleteLastChoice() {
-        console.log("deleteLastChoice");
+    undoLastChoice() {
+        console.log("undoLastChoice");
         let newAnswer = this.state.answer.slice();
         let popped = newAnswer.pop();
         console.log("deleting last word in answer [" + popped + " ]");
@@ -123,71 +130,12 @@ export default class Game extends Component {
         })
     }
 
-    onCorrectChoice(choice) {
-        console.log("Game - correct choice " + choice);
-
-        let outOfDanger = false;
-        let combo = 0;
-        if (this.state.isInDanger) {
-            outOfDanger = true;
-            combo = 0;
-        } else {
-            combo++;
-        }
-
-        let newAnswer = this.state.answer.slice();
-        newAnswer.push(choice);
-
-        this.setState({
-            combo: combo,
-            isInDanger: !outOfDanger,
-            answer: newAnswer
-        });
-
-        if (outOfDanger) this.onSafe();
-    }
-
-    onIncorrectChoice(choice) {
-        console.log("Game - incorrect choice " + choice);
-        let newCombo = 0;
-        let comboLost = false;
-        let isInDanger = false;
-        if (this.state.combo > 0) {
-            newCombo = this.state.combo - 1;
-            comboLost = true;
-        } else {
-            isInDanger = false;
-        }
-        this.setState({
-            isInDanger: !comboLost,
-            combo: newCombo,
-        });
-        if (comboLost) this.onComboLost();
-        if (isInDanger) this.onDanger();
-    }
-
     onNewChoices() {
         console.log("Game - new choices");
     }
 
     onNoMoreChoices() {
         console.log("Game - no more choices");
-    }
-
-    onComboLost() {
-        console.log("Game - combo lost");
-    }
-
-    onDanger() {
-        console.log("Game - danger");
-    }
-
-    onSafe() {
-        console.log("Game - safe (out of danger)");
-    }
-
-    gameOver() {
-
     }
 
     getCurrentQuestion() {
@@ -203,6 +151,6 @@ export default class Game extends Component {
 const styles = {
     container: {
         flex: 1,
-        backgroundColor: "#363636",
+        backgroundColor: "#E3E3E3",
     }
 };

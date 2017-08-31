@@ -31,7 +31,7 @@ const styles = {
         overflow: 'hidden',
         flexDirection: 'row'
     },
-    child: {
+    textContainer: {
         flex: 1,
         backgroundColor: '#FFD728',
     },

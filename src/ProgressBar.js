@@ -16,7 +16,7 @@ export default class ProgressBar extends Component {
         const dummyFlex = 1 - childFlex;
         return (
             <View style={styles.container}>
-                <View style={[styles.child, {flex: childFlex}]}/><View style={{flex: dummyFlex}}/>
+                <View style={[styles.textContainer, {flex: childFlex}]}/><View style={{flex: dummyFlex}}/>
                 <Star/>
             </View>
         )
@@ -36,8 +36,8 @@ const styles = {
         overflow: 'hidden',
         flexDirection: 'row'
     },
-    child: {
+    textContainer: {
         flex: 1,
-        backgroundColor: '#FFD728',
+        backgroundColor: '#434343',
     },
 };

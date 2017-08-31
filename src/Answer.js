@@ -13,36 +13,35 @@ import {
     TouchableHighlight
 } from "react-native";
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
 export default class Answer extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            complete: false
+        }
+    }
 
     render() {
         return (
-            <TouchableHighlight style={styles.container}>
-                <View style={{
-                    flex: 1,
-                    flexWrap: 'wrap',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    alignContent: 'space-between',
-                }}>
+            <View style={styles.container}>
+                <TouchableHighlight style={styles.textContainer} onPress={this.props.onPress}>
                     {this.getBody()}
-                </View>
-            </TouchableHighlight>
+                </TouchableHighlight>
+            </View>
         )
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("Answer - nextProps");
-        console.log(nextProps);
-
-        if (this.isComplete(this.props.answer, nextProps.input)) {
-            this.onComplete();
-        }
-    }
-
-    isComplete(answer, input) {
-        return answer.length === input.length;
+        const complete = this.props.answer.length === nextProps.input.length;
+        this.setState({
+            complete: complete
+        }, () => {
+            if (complete) this.onComplete();
+        });
     }
 
     onComplete() {
@@ -65,32 +64,43 @@ export default class Answer extends Component {
         const isEmpty = this.props.input.length === 0;
         if (isEmpty) return <Text style={styles.instructionText}>{this.props.instructions}</Text>;
 
-        let words = [];
-        for (let i = 0; i < this.props.input.length; i++) {
-            words.push(<Text key={i} style={styles.text}>{this.props.input[i]}</Text>)
+        let text = this.props.input[0];
+        for (let i = 1; i < this.props.input.length; i++) {
+            console.log("input [" + i + "]: [" + this.props.input[i] + "]");
+            text += " " + this.props.input[i];
         }
 
-        return words;
+        return <Text style={styles.text}>{text}</Text>;
     }
 }
 
 const styles = {
     container: {
-        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        margin:10,
+    },
+    textContainer: {
+        maxWidth: 400,
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0)',
-        borderWidth: 1,
-        borderColor: "rgba(255,255,255,0.25)",
+        alignItems: 'flex-end',
+        backgroundColor: '#767676',
         borderRadius: 5,
+        marginRight: 20,
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 1,
+            height: 1
+        },
+        shadowRadius: 3,
+        shadowOpacity: 0.5,
+        padding: 20,
     },
     text: {
-        fontSize: 30,
-        color: "white",
+        color: "#E3E3E3",
         fontFamily: "josefin-sans-bold",
-        textAlign: "center",
-        // fontWeight: "bold",
-        padding: 2,
+        fontSize: 24,
+        textAlign: "right",
     },
     newText: {
         fontSize: 30,
@@ -106,10 +116,12 @@ const styles = {
         textAlign: "center"
     },
     instructionText: {
-        fontSize: 20,
-        fontStyle: 'italic',
-        color: "white",
-        fontFamily: "josefin-sans-light-italic",
-        textAlign: "center"
+        color: "#E3E3E3",
+        fontFamily: "josefin-sans-bold-italic",
+        fontSize: 16,
+        textAlign: "center",
+        // paddingTop: 20,
+        // paddingBottom: 20,
+        // paddingRight: 20,
     }
 };
