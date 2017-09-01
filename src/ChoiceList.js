@@ -20,6 +20,7 @@ export default class ChoiceList extends Component {
         super(props);
 
         let choiceIndices = [];
+        let choiceIndicesHistory = [];
         for (let i = 0; i < this.props.choices.length; i++) {
             choiceIndices.push(0);
         }

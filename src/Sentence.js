@@ -28,12 +28,12 @@ const styles = {
         margin:10,
     },
     textContainer: {
-        maxWidth: 400,
         justifyContent: 'center',
         alignItems: 'flex-start',
         backgroundColor: '#B2B2B2',
         borderRadius: 5,
-        marginLeft: 20,
+        marginLeft: 10,
+        marginRight: 50,
         shadowColor: '#000000',
         shadowOffset: {
             width: 1,

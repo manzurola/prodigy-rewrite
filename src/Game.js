@@ -27,6 +27,19 @@ import Combo from "./Combo";
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
+const CustomLayoutSpring = {
+    duration: 300,
+    create: {
+        type: LayoutAnimation.Types.spring,
+        property: LayoutAnimation.Properties.scaleXY,
+        springDamping: 0.8,
+    },
+    update: {
+        type: LayoutAnimation.Types.spring,
+        springDamping: 0.5,
+    },
+};
+
 export default class Game extends Component {
 
     constructor(props) {
@@ -43,8 +56,8 @@ export default class Game extends Component {
 
     componentWillUpdate() {
         UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-        LayoutAnimation.spring();
-        // LayoutAnimation.configureNext(CustomLayoutSpring);
+        // LayoutAnimation.spring();
+        LayoutAnimation.configureNext(CustomLayoutSpring);
     }
 
     render() {

@@ -77,16 +77,16 @@ export default class Answer extends Component {
 const styles = {
     container: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
         margin:10,
     },
     textContainer: {
-        maxWidth: 400,
         justifyContent: 'center',
-        alignItems: 'flex-end',
+        alignItems: 'flex-start',
         backgroundColor: '#767676',
         borderRadius: 5,
-        marginRight: 20,
+        marginLeft: 30,
+        marginRight: 10,
         shadowColor: '#000000',
         shadowOffset: {
             width: 1,
@@ -98,30 +98,15 @@ const styles = {
     },
     text: {
         color: "#E3E3E3",
+        backgroundColor: 'rgba(0,0,0,0)',
         fontFamily: "josefin-sans-bold",
-        fontSize: 24,
-        textAlign: "right",
-    },
-    newText: {
-        fontSize: 30,
-        color: "white",
-        fontFamily: "josefin-sans-bold",
-        textAlign: "center",
-        fontWeight: "bold",
-    },
-    oldText: {
-        fontSize: 30,
-        color: "white",
-        fontFamily: "josefin-sans-light",
-        textAlign: "center"
+        fontSize: 20,
+        textAlign: "left",
     },
     instructionText: {
         color: "#E3E3E3",
-        fontFamily: "josefin-sans-bold-italic",
-        fontSize: 16,
-        textAlign: "center",
-        // paddingTop: 20,
-        // paddingBottom: 20,
-        // paddingRight: 20,
+        fontFamily: "josefin-sans-light",
+        fontSize: 20,
+        textAlign: "left",
     }
 };
