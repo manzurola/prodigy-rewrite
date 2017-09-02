@@ -2,6 +2,15 @@ const GameData = [
 
     {
         id: "1",
+        sentence: "a test",
+        answer: ["a"],
+        choices: [
+            ["a"],
+        ],
+        instructions: "This is a test"
+    },
+    {
+        id: "1",
         sentence: "Exercises are not always easy for beginners.",
         answer: ["an", "exercise", "is", "not", "always", "easy", "for", "a", "beginner"],
         choices: [
@@ -19,7 +28,7 @@ const GameData = [
     },
     {
         id: "0",
-        sentence: "Exercises are not always easy for beginners.",
+        sentence: "Dogs Live.",
         answer: ["a", "dog", "lives"],
         choices: [
             ["a","what"],

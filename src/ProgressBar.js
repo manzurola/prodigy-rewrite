@@ -27,33 +27,6 @@ export default class ProgressBar extends Component {
             </View>
         )
     }
-
-    // render() {
-    //     let childFlex;
-    //     let dummyFlex;
-    //
-    //     if (this.props.progress === 0) {
-    //         childFlex = 0;
-    //         dummyFlex = 1;
-    //     } else if (this.props.progress === 100) {
-    //         childFlex = 1;
-    //         dummyFlex = 0;
-    //     } else {
-    //         const starWidthCompensation = 5.5;
-    //         childFlex = (this.props.progress + starWidthCompensation) / 100;
-    //         dummyFlex = 1 - childFlex;
-    //     }
-    //
-    //     return (
-    //         <View style={styles.container}>
-    //             <View style={styles.bar}>
-    //                 <View style={[styles.child, {flex: childFlex}]}/>
-    //                 <Star size={30} color={"#434343"} style={{zIndex: 99, top: -11, left: -11, transform: [{ rotate: '22deg'}]}}/>
-    //                 <View style={{flex: dummyFlex}}/>
-    //             </View>
-    //         </View>
-    //     )
-    // }
 }
 
 const styles = {

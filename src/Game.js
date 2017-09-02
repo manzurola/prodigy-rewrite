@@ -46,12 +46,11 @@ export default class Game extends Component {
         super(props);
         this.state = {
             questionIndex: 0,
-            answer: [],
-            score: 0,
-            progress: 0,
-            combo: 0,
-            isInDanger: false,
             choiceIndex: 0,
+            answer: [],
+            progress: 0,
+            score: 0,
+            combo: 0,
         }
     }
 
@@ -68,7 +67,7 @@ export default class Game extends Component {
                     height: SCREEN_HEIGHT / 10,
                     borderWidth: 1
                 }}>
-                    <ProgressBar progress={49 / 100} barWidth={SCREEN_WIDTH *  4/5}/>
+                    <ProgressBar progress={this.state.progress} barWidth={SCREEN_WIDTH *  4/5}/>
                 </View>
                 <View style={{
                     height: (SCREEN_HEIGHT / 10) * 6,
@@ -166,6 +165,12 @@ export default class Game extends Component {
     onAnswerComplete(result) {
         console.log("Game - onAnswerComplete");
         console.log(result);
+        this.setState({
+            questionIndex: this.state.questionIndex + 1,
+            choiceIndex: 0,
+            answer: [],
+            progress: (this.state.progress + 1) / this.props.data.length
+        })
     }
 }
 
