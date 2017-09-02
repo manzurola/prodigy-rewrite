@@ -65,16 +65,16 @@ export default class Game extends Component {
         return (
             <View style={styles.container}>
                 <View style={{
-                    flex: 1.5,
+                    height: SCREEN_HEIGHT / 10,
+                    borderWidth: 1
                 }}>
-                    <ProgressBar progress={this.state.progress}/>
+                    <ProgressBar progress={100}/>
                 </View>
                 <View style={{
-                    flex: 7,
-                    flexDirection: 'column',
+                    height: (SCREEN_HEIGHT / 10) * 6,
+                    borderWidth: 1,
                     padding: 10,
                     justifyContent: 'flex-end',
-                    alignItems: 'stretch'
                 }}>
                     <Sentence text={this.getCurrentQuestion().sentence}/>
                     <Answer answer={this.getCurrentQuestion().answer}
@@ -90,8 +90,8 @@ export default class Game extends Component {
                     {this.getFeedback()}
                 </View>
                 <View style={{
-                    flex: 5,
-
+                    height: (SCREEN_HEIGHT / 10) * 3,
+                    borderWidth: 1
                 }}>
                     {this.getChoices()}
                 </View>

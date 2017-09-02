@@ -83,7 +83,7 @@ const styles = {
         margin: 5,
         width: 230,
         height: 50,
-        borderRadius: 20,
+        borderRadius: 50,
         // alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#434343',

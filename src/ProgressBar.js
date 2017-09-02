@@ -12,12 +12,28 @@ export default class ProgressBar extends Component {
     }
 
     render() {
-        const childFlex = this.props.progress / 100;
-        const dummyFlex = 1 - childFlex;
+        let childFlex;
+        let dummyFlex;
+
+        if (this.props.progress === 0) {
+            childFlex = 0;
+            dummyFlex = 1;
+        } else if (this.props.progress === 100) {
+            childFlex = 1;
+            dummyFlex = 0;
+        } else {
+            const starWidthCompensation = 5.5;
+            childFlex = (this.props.progress + starWidthCompensation) / 100;
+            dummyFlex = 1 - childFlex;
+        }
+
         return (
             <View style={styles.container}>
-                <View style={[styles.textContainer, {flex: childFlex}]}/><View style={{flex: dummyFlex}}/>
-                <Star/>
+                <View style={styles.bar}>
+                    <View style={[styles.child, {flex: childFlex}]}/>
+                    <Star style={{zIndex: 99, top: -11, left: -11}}/>
+                    <View style={{flex: dummyFlex}}/>
+                </View>
             </View>
         )
     }
@@ -26,18 +42,24 @@ export default class ProgressBar extends Component {
 const styles = {
     container: {
         flex: 1,
-        height: 10,
-        marginTop: 10,
-        marginBottom : 10,
-        marginLeft: 20,
-        marginRight: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    bar: {
+        height: 6,
         borderRadius: 30,
         backgroundColor: 'rgba(255,255,255,0.2)',
-        overflow: 'hidden',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginLeft: 50,
+        marginRight: 50,
     },
-    textContainer: {
-        flex: 1,
+    child: {
         backgroundColor: '#434343',
+        borderTopLeftRadius: 30,
+        borderBottomLeftRadius: 30,
+    },
+    dummyChild: {
+        borderTopRightRadius: 30,
+        borderBottomRightRadius: 30,
     },
 };

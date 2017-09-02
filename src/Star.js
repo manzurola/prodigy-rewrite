@@ -3,7 +3,7 @@
  */
 import React, {Component} from "react";
 import {View, Animated, PanResponder, Dimensions, LayoutAnimation, UIManager, Text} from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
+import {FontAwesome} from "@expo/vector-icons";
 
 export default class Star extends Component {
 
@@ -13,7 +13,9 @@ export default class Star extends Component {
 
     render() {
         return (
-            <FontAwesome name="star" size={32} color="#FFFF00" />
+            <View style={[this.props.style]}>
+                <FontAwesome name="star" size={32} color="#FFFF00"/>
+            </View>
         )
     }
 }
@@ -23,7 +25,7 @@ const styles = {
         flex: 1,
         height: 10,
         marginTop: 10,
-        marginBottom : 10,
+        marginBottom: 10,
         marginLeft: 20,
         marginRight: 20,
         borderRadius: 30,

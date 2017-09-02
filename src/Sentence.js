@@ -46,10 +46,9 @@ const styles = {
     text: {
         color: "#434343",
         fontFamily: "josefin-sans-bold",
-        fontSize: 24,
+        fontSize: 20,
         textAlign: "left",
-        // paddingTop: 10,
-        // paddingBottom: 10,
-        // paddingLeft: 20,
+        lineHeight: 30,
+        letterSpacing: 0.2
     }
 };

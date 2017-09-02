@@ -87,7 +87,8 @@ const styles = {
         backgroundColor: 'rgba(88,86,214, 1)',
         borderRadius: 5,
         marginLeft: 40,
-        marginRight: 10,
+        marginRight: 20,
+        padding: 20,
         shadowColor: '#000000',
         shadowOffset: {
             width: 1,
@@ -95,7 +96,6 @@ const styles = {
         },
         shadowRadius: 3,
         shadowOpacity: 0.5,
-        padding: 20,
     },
     textContainer: {
         justifyContent: 'center',
@@ -103,7 +103,8 @@ const styles = {
         backgroundColor: '#767676',
         borderRadius: 5,
         marginLeft: 40,
-        marginRight: 10,
+        marginRight: 20,
+        padding: 20,
         shadowColor: '#000000',
         shadowOffset: {
             width: 1,
@@ -111,21 +112,22 @@ const styles = {
         },
         shadowRadius: 3,
         shadowOpacity: 0.5,
-        padding: 20,
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
     },
     text: {
         color: "#E3E3E3",
         backgroundColor: 'rgba(0,0,0,0)',
         fontFamily: "josefin-sans-bold",
-        fontSize: 24,
+        fontSize: 20,
         textAlign: "left",
+        lineHeight: 30,
     },
     instructionText: {
         color: "#E3E3E3",
-        fontFamily: "josefin-sans-light",
-        fontSize: 24,
+        fontFamily: "josefin-sans-light-italic",
+        fontSize: 20,
         textAlign: "left",
+        lineHeight: 30,
     },
     correct: {
         backgroundColor: 'rgba(76,217,100)',
