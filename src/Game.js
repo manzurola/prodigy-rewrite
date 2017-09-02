@@ -169,7 +169,7 @@ export default class Game extends Component {
             questionIndex: this.state.questionIndex + 1,
             choiceIndex: 0,
             answer: [],
-            progress: (this.state.progress + 1) / this.props.data.length
+            progress: (this.state.questionIndex + 1) / this.props.data.length
         })
     }
 }
