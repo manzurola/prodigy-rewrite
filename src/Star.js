@@ -14,7 +14,16 @@ export default class Star extends Component {
     render() {
         return (
             <View style={[this.props.style]}>
-                <FontAwesome name="star" size={32} color="#FFFF00"/>
+                <FontAwesome name="star" size={this.props.size} color={this.props.color}
+                style={{
+                    shadowColor: '#000000',
+                    shadowOffset: {
+                        width: 1,
+                        height: 1
+                    },
+                    shadowRadius: 3,
+                    shadowOpacity: 0.5,
+                }}/>
             </View>
         )
     }
