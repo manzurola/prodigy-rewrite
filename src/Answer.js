@@ -21,14 +21,16 @@ export default class Answer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            complete: false
+            complete: false,
+            correct: false
         }
     }
 
     render() {
+        let containerStyle = this.state.correct ? styles.correctTextContainer : styles.textContainer;
         return (
             <View style={styles.container}>
-                <TouchableHighlight style={styles.textContainer} onPress={this.props.onPress}>
+                <TouchableHighlight style={containerStyle} onPress={this.props.onPress}>
                     {this.getBody()}
                 </TouchableHighlight>
             </View>
@@ -37,25 +39,25 @@ export default class Answer extends Component {
 
     componentWillReceiveProps(nextProps) {
         const complete = this.props.answer.length === nextProps.input.length;
+        let correct = true;
+        for (let i = 0; i < this.props.answer.length; i++) {
+            let expected = this.props.answer[i];
+            let actual = nextProps.input[i];
+            console.log("expected [" + expected + "], actual [" + actual + "]");
+            correct &= expected === actual;
+        }
+        console.log("Answer - componentWillReceiveProps: complete [" + complete +"], correct [" + correct + "]");
         this.setState({
-            complete: complete
+            complete: complete,
+            correct: correct
         }, () => {
             if (complete) this.onComplete();
         });
     }
 
     onComplete() {
-        console.log("Answer - onComplete");
-        let result = {
-            input: {},
-            answer: this.props.answer
-        };
-        for (let i = 0; i < this.props.answer.length; i++) {
-            let expected = this.props.answer[i];
-            let actual = this.props.input[i];
-            result.input[actual] = expected === actual;
-        }
-        this.props.onComplete(result);
+        console.log("Answer - onComplete [" + this.state.correct + "]");
+        this.props.onComplete(this.state.correct);
     }
 
 
@@ -66,7 +68,6 @@ export default class Answer extends Component {
 
         let text = this.props.input[0];
         for (let i = 1; i < this.props.input.length; i++) {
-            console.log("input [" + i + "]: [" + this.props.input[i] + "]");
             text += " " + this.props.input[i];
         }
 
@@ -78,14 +79,14 @@ const styles = {
     container: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        margin:10,
+        marginBottom:20,
     },
-    textContainer: {
+    correctTextContainer: {
         justifyContent: 'center',
         alignItems: 'flex-start',
-        backgroundColor: '#767676',
+        backgroundColor: 'rgba(88,86,214, 1)',
         borderRadius: 5,
-        marginLeft: 30,
+        marginLeft: 40,
         marginRight: 10,
         shadowColor: '#000000',
         shadowOffset: {
@@ -96,17 +97,37 @@ const styles = {
         shadowOpacity: 0.5,
         padding: 20,
     },
+    textContainer: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        backgroundColor: '#767676',
+        borderRadius: 5,
+        marginLeft: 40,
+        marginRight: 10,
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 1,
+            height: 1
+        },
+        shadowRadius: 3,
+        shadowOpacity: 0.5,
+        padding: 20,
+        flexWrap: 'wrap'
+    },
     text: {
         color: "#E3E3E3",
         backgroundColor: 'rgba(0,0,0,0)',
         fontFamily: "josefin-sans-bold",
-        fontSize: 20,
+        fontSize: 24,
         textAlign: "left",
     },
     instructionText: {
         color: "#E3E3E3",
         fontFamily: "josefin-sans-light",
-        fontSize: 20,
+        fontSize: 24,
         textAlign: "left",
+    },
+    correct: {
+        backgroundColor: 'rgba(76,217,100)',
     }
 };

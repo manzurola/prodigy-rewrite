@@ -18,53 +18,40 @@ import {
 export default class ChoiceList extends Component {
     constructor(props) {
         super(props);
-
-        let choiceIndices = [];
-        let choiceIndicesHistory = [];
-        for (let i = 0; i < this.props.choices.length; i++) {
-            choiceIndices.push(0);
-        }
-
         this.state = {
-            index: 0,
-            choiceIndices: choiceIndices
+            index: 0
         };
     }
 
     render() {
         return (
-            <View style={styles.choiceListContainer} onPress={() => this.onPress()}>
+            <View style={styles.choiceListContainer}>
                 {this.getChoices()}
             </View>
         )
     }
 
-    onChoice(index) {
-        console.log("ChoiceList - onChoice " + index);
-        let newChoiceIndices = this.state.choiceIndices.slice();
-        const choiceIndex = newChoiceIndices[index];
-        newChoiceIndices[index]++;
-        this.setState({
-            choiceIndices: newChoiceIndices
-        }, () => {
-            this.props.onChoice(this.props.choices[index][choiceIndex])
-        });
-    }
-
-    onPress() {
-        console.log("onPress of Answer");
-        this.props.onPress();
+    onChoice(word) {
+        console.log("ChoiceList - onChoice " + word);
+        // this.setState({
+        //     index: this.state.index + 1
+        // }, () => {
+        //     this.props.onChoice(word);
+        // });
+        this.props.onChoice(word);
     }
 
     getChoices() {
         let choices = [];
-        for (let i = 0; i < this.props.choices.length; i++) {
-            let text = this.props.choices[i][this.state.choiceIndices[i]];
+        if (this.props.index >= this.props.choices.length) return choices;
+        for (let i = 0; i < this.props.choices[this.props.index].length; i++) {
+            let text = this.props.choices[this.props.index][i];
             console.log("creating choice with word " + text);
             choices.push(<Choice key={i}
                                  text={text}
-                                 onPress={() => this.onChoice(i)}/>)
+                                 onPress={() => this.onChoice(text)}/>)
         }
+
         return choices;
     }
 }
@@ -83,7 +70,6 @@ class Choice extends Component {
         console.log("onPress of choice: [" + this.props.text + "]");
         this.props.onPress();
     }
-
 }
 
 const styles = {
@@ -110,7 +96,7 @@ const styles = {
         shadowOpacity: 0.5
     },
     choiceText: {
-        fontSize: 20,
+        fontSize: 24,
         color: "#E3E3E3",
         paddingLeft: 50,
         backgroundColor: 'rgba(0,0,0,0)',

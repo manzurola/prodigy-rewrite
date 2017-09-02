@@ -5,9 +5,15 @@ const GameData = [
         sentence: "Exercises are not always easy for beginners.",
         answer: ["an", "exercise", "is", "not", "always", "easy", "for", "a", "beginner"],
         choices: [
-            ["an", "exercise", "a"],
-            ["is", "not", "always"],
-            ["easy","for", "beginner"],
+            ["an"],
+            ["exercise"],
+            ["is"],
+            ["not", "isn't"],
+            ["never", "always"],
+            ["easy"],
+            ["a","for", "beginner"],
+            ["a","beginner"],
+            ["beginner"],
         ],
         instructions: "Put the sentence into the singular"
     },

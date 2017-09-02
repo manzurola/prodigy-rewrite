@@ -25,15 +25,15 @@ const styles = {
         // height: 50,
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        margin:10,
+        marginBottom:20,
     },
     textContainer: {
         justifyContent: 'center',
         alignItems: 'flex-start',
         backgroundColor: '#B2B2B2',
         borderRadius: 5,
-        marginLeft: 10,
-        marginRight: 50,
+        marginLeft: 20,
+        marginRight: 40,
         shadowColor: '#000000',
         shadowOffset: {
             width: 1,
@@ -46,7 +46,7 @@ const styles = {
     text: {
         color: "#434343",
         fontFamily: "josefin-sans-bold",
-        fontSize: 20,
+        fontSize: 24,
         textAlign: "left",
         // paddingTop: 10,
         // paddingBottom: 10,

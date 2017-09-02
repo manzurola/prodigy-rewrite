@@ -50,7 +50,8 @@ export default class Game extends Component {
             score: 0,
             progress: 0,
             combo: 0,
-            isInDanger: false
+            isInDanger: false,
+            choiceIndex: 0,
         }
     }
 
@@ -79,7 +80,7 @@ export default class Game extends Component {
                     <Answer answer={this.getCurrentQuestion().answer}
                             input={this.state.answer}
                             instructions={this.getCurrentQuestion().instructions}
-                            onPress={() => this.undoLastChoice()}
+                            onPress={() => this.onAnswerPress()}
                             onComplete={(result) => this.onAnswerComplete(result)}
                     />
                 </View>
@@ -107,6 +108,7 @@ export default class Game extends Component {
         return (
             <ChoiceList
                 choices={this.getCurrentQuestion().choices}
+                index={this.state.choiceIndex}
                 answerKey={this.getCurrentQuestion().answerKey}
                 onNewChoices={() => {
                     this.onNewChoices();
@@ -121,6 +123,10 @@ export default class Game extends Component {
         )
     }
 
+    onAnswerPress() {
+        if (this.state.answer.length != 0) this.undoLastChoice();
+    }
+
     onChoice(choice) {
 
         let newAnswer = this.state.answer.slice();
@@ -129,7 +135,8 @@ export default class Game extends Component {
         console.log("new answer: " + newAnswer.toString());
 
         this.setState({
-            answer: newAnswer
+            answer: newAnswer,
+            choiceIndex: this.state.choiceIndex + 1
         })
     }
 
@@ -139,7 +146,8 @@ export default class Game extends Component {
         let popped = newAnswer.pop();
         console.log("deleting last word in answer [" + popped + " ]");
         this.setState({
-            answer: newAnswer
+            answer: newAnswer,
+            choiceIndex: this.state.choiceIndex - 1
         })
     }
 
