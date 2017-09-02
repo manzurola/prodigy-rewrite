@@ -14,6 +14,9 @@ import {
     TouchableHighlight,
     TouchableWithoutFeedback
 } from "react-native";
+import TimerMixin from "react-timer-mixin";
+
+var reactMixin = require('react-mixin');
 
 export default class ChoiceList extends Component {
     constructor(props) {
@@ -58,6 +61,23 @@ export default class ChoiceList extends Component {
 
 class Choice extends Component {
 
+    //constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         text: ""
+    //     };
+    //     this.prepareTextTimeout();
+    // }
+    //
+    // componentWillReceiveProps(nextProps) {
+    //     if (this.props.text === nextProps.text) return;
+    //     this.setState({
+    //         text: ""
+    //     }, () => {
+    //         this.prepareTextTimeout();
+    //     });
+    // }
+
     render() {
         return (
             <TouchableHighlight style={styles.choiceContainer} onPress={(event) => this.onPress(event)}>
@@ -70,7 +90,28 @@ class Choice extends Component {
         console.log("onPress of choice: [" + this.props.text + "]");
         this.props.onPress();
     }
+
+    prepareTextTimeout() {
+        // let text = "";
+        // for (let i = 0; i < this.props.text.length; i++) {
+        //     this.setTimeout(
+        //         () => {
+        //             text += this.props.text.charAt(i);
+        //             console.log("setting new text in timeout " + text);
+        //             this.setState({
+        //                 text: text
+        //             })
+        //         },
+        //         10 * i
+        //     );
+        // }
+    }
+
+    // componentDidMount() {
+    //
+    // }
 }
+reactMixin(Choice.prototype, TimerMixin);
 
 const styles = {
     choiceListContainer: {

@@ -65,13 +65,11 @@ export default class Game extends Component {
             <View style={styles.container}>
                 <View style={{
                     height: SCREEN_HEIGHT / 10,
-                    borderWidth: 1
                 }}>
                     <ProgressBar progress={this.state.progress} barWidth={SCREEN_WIDTH *  4/5}/>
                 </View>
                 <View style={{
                     height: (SCREEN_HEIGHT / 10) * 6,
-                    borderWidth: 1,
                     padding: 10,
                     justifyContent: 'flex-end',
                 }}>
@@ -88,9 +86,9 @@ export default class Game extends Component {
                 }}>
                     {this.getFeedback()}
                 </View>
+                <View style={styles.separator}/>
                 <View style={{
                     height: (SCREEN_HEIGHT / 10) * 3,
-                    borderWidth: 1
                 }}>
                     {this.getChoices()}
                 </View>
@@ -178,5 +176,12 @@ const styles = {
     container: {
         flex: 1,
         backgroundColor: "#E3E3E3",
+    },
+    separator: {
+        height: 1,
+        width: SCREEN_WIDTH - 20,
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: "#B2B2B2"
     }
 };
