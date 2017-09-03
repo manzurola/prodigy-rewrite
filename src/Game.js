@@ -17,10 +17,14 @@ import {
     LayoutAnimation,
     UIManager
 } from "react-native";
+
+import TimerMixin from "react-timer-mixin";
+var reactMixin = require('react-mixin');
+
 import ProgressBar from "./ProgressBar";
 import Sentence from "./Sentence";
 import Answer from "./Answer";
-import ChoiceList from "./ChoiceList";
+import Choice from "./Choice";
 import Danger from "./Danger";
 import Combo from "./Combo";
 
@@ -101,27 +105,58 @@ export default class Game extends Component {
         else if (this.state.combo > 1) return <Combo count={this.state.combo}/>;
     }
 
+    // getChoices() {
+    //     return (
+    //         <ChoiceList
+    //             choices={this.getCurrentQuestion().choices}
+    //             index={this.state.choiceIndex}
+    //             answerKey={this.getCurrentQuestion().answerKey}
+    //             onNewChoices={() => {
+    //                 this.onNewChoices();
+    //             }}
+    //             renderNoMoreChoices={ () => {
+    //                 this.renderNoMoreChoices();
+    //             }}
+    //             onChoice={(choice) => {
+    //                 this.onChoice(choice);
+    //             }}
+    //         />
+    //     )
+    // }
+
     getChoices() {
-        return (
-            <ChoiceList
-                choices={this.getCurrentQuestion().choices}
-                index={this.state.choiceIndex}
-                answerKey={this.getCurrentQuestion().answerKey}
-                onNewChoices={() => {
-                    this.onNewChoices();
-                }}
-                onNoMoreChoices={ () => {
-                    this.onNoMoreChoices();
-                }}
-                onChoice={(choice) => {
-                    this.onChoice(choice);
-                }}
-            />
-        )
+        let elements = [];
+        let questionChoices = this.getCurrentQuestion().choices;
+        if (this.state.choiceIndex >= questionChoices.length) return elements;
+        let currentChoices = questionChoices[this.state.choiceIndex];
+        for (let i = 0; i < currentChoices.length; i++) {
+            let text = currentChoices[i];
+            console.log("creating choice with word " + text);
+            elements.push(<Choice key={i}
+                                  text={text}
+                                  onPress={() => this.onChoice(text)}/>);
+            // separator
+            if (i < currentChoices.length - 1) {
+                elements.push(<View style={styles.choiceSeparator}/>);
+            }
+        }
+
+        return <View style={styles.choiceListContainer}>{elements}</View>;
     }
 
     onAnswerPress() {
         if (this.state.answer.length != 0) this.undoLastChoice();
+    }
+
+    onAnswerComplete(result) {
+        console.log("Game - onAnswerComplete");
+        console.log(result);
+        this.setState({
+            questionIndex: this.state.questionIndex + 1,
+            choiceIndex: 0,
+            answer: [],
+            progress: (this.state.questionIndex + 1) / this.props.data.length
+        })
     }
 
     onChoice(choice) {
@@ -152,25 +187,16 @@ export default class Game extends Component {
         console.log("Game - new choices");
     }
 
-    onNoMoreChoices() {
+    renderNoMoreChoices() {
         console.log("Game - no more choices");
     }
 
     getCurrentQuestion() {
         return this.props.data[this.state.questionIndex];
     }
-
-    onAnswerComplete(result) {
-        console.log("Game - onAnswerComplete");
-        console.log(result);
-        this.setState({
-            questionIndex: this.state.questionIndex + 1,
-            choiceIndex: 0,
-            answer: [],
-            progress: (this.state.questionIndex + 1) / this.props.data.length
-        })
-    }
 }
+
+reactMixin(Game.prototype, TimerMixin);
 
 const styles = {
     container: {
@@ -183,5 +209,13 @@ const styles = {
         marginLeft: 10,
         marginRight: 10,
         backgroundColor: "#B2B2B2"
+    },
+    choiceListContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    choiceSeparator: {
+        height: 5,
     }
 };

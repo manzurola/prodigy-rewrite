@@ -13,12 +13,26 @@ export default class Feedback extends Component {
             </View>
         )
     }
+
+    componentDidMount() {
+
+    }
 }
 
 const styles = {
     container: {
-        borderWidth: 1,
-        borderColor: "white",
+        width: 230,
+        height: 50,
+        borderRadius: 50 / 2,
+        justifyContent: 'center',
+        backgroundColor: '#434343',
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 1,
+            height: 1
+        },
+        shadowRadius: 3,
+        shadowOpacity: 0.5
     },
     text: {
         color: "white"

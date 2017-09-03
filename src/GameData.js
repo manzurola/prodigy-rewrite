@@ -2,7 +2,7 @@ const GameData = [
 
     {
         id: "1",
-        sentence: "a test",
+        sentence: "a  test",
         answer: ["a"],
         choices: [
             ["a"],

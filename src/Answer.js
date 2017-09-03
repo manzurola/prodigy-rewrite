@@ -30,7 +30,10 @@ export default class Answer extends Component {
         let containerStyle = this.state.correct ? styles.correctTextContainer : styles.textContainer;
         return (
             <View style={styles.container}>
-                <TouchableHighlight style={containerStyle} onPress={this.props.onPress}>
+                <TouchableHighlight style={containerStyle}
+                                    onPress={() => this.props.onPress({
+                                        id: this.props.id
+                                    })}>
                     {this.getBody()}
                 </TouchableHighlight>
             </View>
@@ -38,6 +41,11 @@ export default class Answer extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
+        if (this.props.input === nextProps.input) return;
+
+        console.log("Answer - componentWillReceiveProps");
+        console.log(nextProps);
         const complete = this.props.answer.length === nextProps.input.length;
         let correct = true;
         for (let i = 0; i < this.props.answer.length; i++) {
@@ -46,7 +54,7 @@ export default class Answer extends Component {
             console.log("expected [" + expected + "], actual [" + actual + "]");
             correct &= expected === actual;
         }
-        console.log("Answer - componentWillReceiveProps: complete [" + complete +"], correct [" + correct + "]");
+        console.log("Answer - componentWillReceiveProps: complete [" + complete + "], correct [" + correct + "]");
         this.setState({
             complete: complete,
             correct: correct
@@ -57,7 +65,10 @@ export default class Answer extends Component {
 
     onComplete() {
         console.log("Answer - onComplete [" + this.state.correct + "]");
-        this.props.onComplete(this.state.correct);
+        this.props.onComplete({
+            id: this.props.id,
+            correct: this.state.correct
+        });
     }
 
 
@@ -79,7 +90,7 @@ const styles = {
     container: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        marginBottom:20,
+        marginBottom: 20,
     },
     correctTextContainer: {
         justifyContent: 'center',
@@ -88,7 +99,10 @@ const styles = {
         borderRadius: 5,
         marginLeft: 40,
         marginRight: 20,
-        padding: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
         shadowColor: '#000000',
         shadowOffset: {
             width: 1,
@@ -104,7 +118,10 @@ const styles = {
         borderRadius: 5,
         marginLeft: 40,
         marginRight: 20,
-        padding: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
         shadowColor: '#000000',
         shadowOffset: {
             width: 1,
