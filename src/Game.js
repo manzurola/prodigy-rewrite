@@ -17,16 +17,13 @@ import {
     LayoutAnimation,
     UIManager
 } from "react-native";
-
 import TimerMixin from "react-timer-mixin";
-var reactMixin = require('react-mixin');
-
 import ProgressBar from "./ProgressBar";
 import Sentence from "./Sentence";
 import Answer from "./Answer";
 import Choice from "./Choice";
-import Danger from "./Danger";
-import Combo from "./Combo";
+import Feedback from "./Feedback";
+let reactMixin = require('react-mixin');
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -50,12 +47,15 @@ export default class Game extends Component {
         super(props);
         this.state = {
             questionIndex: 0,
+            answerComplete: false,
             choiceIndex: 0,
             answer: [],
             progress: 0,
             score: 0,
             combo: 0,
-        }
+            playingFeedback: false,
+        };
+        this.evaluation = {};
     }
 
     componentWillUpdate() {
@@ -70,7 +70,7 @@ export default class Game extends Component {
                 <View style={{
                     height: SCREEN_HEIGHT / 10,
                 }}>
-                    <ProgressBar progress={this.state.progress} barWidth={SCREEN_WIDTH *  4/5}/>
+                    <ProgressBar progress={this.state.progress} barWidth={SCREEN_WIDTH * 4 / 5}/>
                 </View>
                 <View style={{
                     height: (SCREEN_HEIGHT / 10) * 6,
@@ -85,49 +85,45 @@ export default class Game extends Component {
                             onComplete={(result) => this.onAnswerComplete(result)}
                     />
                 </View>
-                <View style={{
-                    flex: 0,
-                }}>
-                    {this.getFeedback()}
-                </View>
                 <View style={styles.separator}/>
-                <View style={{
-                    height: (SCREEN_HEIGHT / 10) * 3,
-                }}>
-                    {this.getChoices()}
+                <View style={styles.choicesContainer}>
+                    {this.getChoicesOrFeedback()}
                 </View>
             </View>
         )
     }
 
-    getFeedback() {
-        if (this.state.isInDanger) return <Danger/>;
-        else if (this.state.combo > 1) return <Combo count={this.state.combo}/>;
+    getChoicesOrFeedback() {
+        if (this.state.answerComplete) return this.getFeedback();
+        return this.getChoices();
     }
 
-    // getChoices() {
-    //     return (
-    //         <ChoiceList
-    //             choices={this.getCurrentQuestion().choices}
-    //             index={this.state.choiceIndex}
-    //             answerKey={this.getCurrentQuestion().answerKey}
-    //             onNewChoices={() => {
-    //                 this.onNewChoices();
-    //             }}
-    //             renderNoMoreChoices={ () => {
-    //                 this.renderNoMoreChoices();
-    //             }}
-    //             onChoice={(choice) => {
-    //                 this.onChoice(choice);
-    //             }}
-    //         />
-    //     )
-    // }
+    getFeedback() {
+        return <Feedback
+            expectedAnswer={this.getCurrentQuestion().answer}
+            actualAnswer={this.state.answer}
+            onEnd={() => this.onFeedbackEnd()}
+            onChoiceFeedback={() => this.onChoiceFeedback()}/>;
+    }
+
 
     getChoices() {
         let elements = [];
         let questionChoices = this.getCurrentQuestion().choices;
-        if (this.state.choiceIndex >= questionChoices.length) return elements;
+        if (this.state.choiceIndex >= questionChoices.length) {
+            return elements;
+        }
+
+        if (this.state.playingFeedback) {
+            return [
+                // load feedback choice with word as last choice selected
+                <Choice key={i}
+                        text={this.state.answer[this.state.answer.length - 1]}
+                        feedback={this.evaluation.feedback}
+                        onPress={() => {}}/>
+            ]
+        }
+
         let currentChoices = questionChoices[this.state.choiceIndex];
         for (let i = 0; i < currentChoices.length; i++) {
             let text = currentChoices[i];
@@ -141,7 +137,7 @@ export default class Game extends Component {
             }
         }
 
-        return <View style={styles.choiceListContainer}>{elements}</View>;
+        return elements;
     }
 
     onAnswerPress() {
@@ -151,12 +147,13 @@ export default class Game extends Component {
     onAnswerComplete(result) {
         console.log("Game - onAnswerComplete");
         console.log(result);
+        this.evaluateCurrentAnswer();
         this.setState({
-            questionIndex: this.state.questionIndex + 1,
-            choiceIndex: 0,
-            answer: [],
-            progress: (this.state.questionIndex + 1) / this.props.data.length
-        })
+            answerComplete: true,
+            playingFeedback: true
+        });
+
+        // activate chain feedback animation and reset playingFeedback when done
     }
 
     onChoice(choice) {
@@ -183,6 +180,17 @@ export default class Game extends Component {
         })
     }
 
+    onFeedbackEnd() {
+        console.log("Feedback end, no setting state.answerComplete to false");
+        this.setState({
+            questionIndex: this.state.questionIndex + 1,
+            choiceIndex: 0,
+            answerComplete: false,
+            answer: [],
+            progress: (this.state.questionIndex + 1) / this.props.data.length
+        })
+    }
+
     onNewChoices() {
         console.log("Game - new choices");
     }
@@ -193,6 +201,60 @@ export default class Game extends Component {
 
     getCurrentQuestion() {
         return this.props.data[this.state.questionIndex];
+    }
+
+    onChoiceFeedback(data) {
+        console.log("Game - onChoiceFeedback of [" + data.index + "]");
+    }
+
+    evaluateCurrentAnswer() {
+        const textsOnCorrect = [
+            "Correct Answer!",
+            "Great Answer!",
+            "Awesome Answer!",
+            "Gorgeous Answer!",
+            "Spectacular Answer",
+        ];
+        const textsOnIncorrect = [
+            "Wrong!",
+            "Ouch!",
+            "Noooooo!",
+            "OMG You Suck!",
+            "Just Give Up Already...",
+        ];
+
+        const expectedAnswer = this.getCurrentQuestion().answer;
+        const actualAnswer = this.state.answer;
+
+        const minAnswerLength = expectedAnswer.length > actualAnswer.length ? actualAnswer.length : expectedAnswer.length;
+
+        let results = [];
+        for (let i = 0; i < minAnswerLength; i++) {
+            results.push(expectedAnswer[i] === actualAnswer[i]);
+        }
+        let entries = [];
+        let totalScore = 0;
+        let combo = 1;
+        let scorePerChoice = 0;
+        for (let i = 0; i < results.length; i++) {
+            let result = results[i];
+            let isLast = i === results.length - 1;
+            scorePerChoice = result ? 100 * combo : 0;
+            entries.push({
+                combo: combo,
+                score: scorePerChoice,
+                result: result,
+                text: !isLast ? "+" + scorePerChoice : (result ? textsOnCorrect[combo] : textsOnIncorrect[combo]),
+                isLast: i === results.length - 1
+            });
+            combo = result ? combo + 1 : 1;
+            totalScore += scorePerChoice;
+        }
+
+        this.evaluation = {
+            feedback: entries,
+            totalScore: totalScore
+        };
     }
 }
 
@@ -210,7 +272,8 @@ const styles = {
         marginRight: 10,
         backgroundColor: "#B2B2B2"
     },
-    choiceListContainer: {
+    choicesContainer: {
+        height: (SCREEN_HEIGHT / 10) * 3,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
