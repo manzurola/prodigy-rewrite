@@ -16,11 +16,14 @@ export default class ProgressBar extends Component {
         super(props);
 
         let childWidth = this.getChildWidth(this.props.barWidth, this.props.progress);
-        this.state = {
-            progressWidthAnim: new Animated.Value(childWidth),
-            starLeftAnim: new Animated.Value(this.getStarLeft(childWidth)),
-            starRotateAnim: new Animated.Value(0),
-        };
+        // this.state = {
+        //     progressWidthAnim: new Animated.Value(childWidth),
+        //     starLeftAnim: new Animated.Value(this.getStarLeft(childWidth)),
+        //     starRotateAnim: new Animated.Value(0),
+        // };
+        this.progressWidthAnim = new Animated.Value(childWidth);
+        this.starLeftAnim = new Animated.Value(this.getStarLeft(childWidth));
+        this.starRotateAnim = new Animated.Value(0);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -29,7 +32,7 @@ export default class ProgressBar extends Component {
         console.log("ProgressBar nextProps.progress " + nextProps.progress);
         let childWidth = this.getChildWidth(this.props.barWidth, nextProps.progress);
         Animated.timing(
-            this.state.progressWidthAnim,
+            this.progressWidthAnim,
             {
                 toValue: childWidth,
                 duration: ANIMATION_TIME,
@@ -37,7 +40,7 @@ export default class ProgressBar extends Component {
             }
         ).start();
         Animated.timing(
-            this.state.starLeftAnim,
+            this.starLeftAnim,
             {
                 toValue: this.getStarLeft(childWidth),
                 duration: ANIMATION_TIME,
@@ -48,7 +51,7 @@ export default class ProgressBar extends Component {
             starRotateAnim: new Animated.Value(0)
         }, () => {
             Animated.timing(
-                this.state.starRotateAnim,
+                this.starRotateAnim,
                 {
                     toValue: 1, //due to interpolation
                     duration: ANIMATION_TIME,
@@ -60,11 +63,11 @@ export default class ProgressBar extends Component {
     }
 
     render() {
-        let {progressWidthAnim, starLeftAnim} = this.state;
+        let {progressWidthAnim, starLeftAnim} = this;
 
         // Second interpolate beginning and end values (in this case 0 and 1)
         console.log((STAR_ROTATION + 360) + "deg");
-        const starSpin = this.state.starRotateAnim.interpolate({
+        const starSpin = this.starRotateAnim.interpolate({
             inputRange: [0, 1],
             outputRange: [STAR_ROTATION_DEG, (STAR_ROTATION + 360) + "deg"]
         });
