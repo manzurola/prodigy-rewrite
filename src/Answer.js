@@ -43,34 +43,26 @@ export default class Answer extends Component {
     componentWillReceiveProps(nextProps) {
 
         if (this.props.input === nextProps.input) return;
+        // if (nextProps.input.length > this.props.input.length) this.onTextAdded();
 
-        console.log("Answer - componentWillReceiveProps");
-        console.log(nextProps);
         const complete = this.props.answer.length === nextProps.input.length;
-        let correct = true;
-        for (let i = 0; i < this.props.answer.length; i++) {
-            let expected = this.props.answer[i];
-            let actual = nextProps.input[i];
-            console.log("expected [" + expected + "], actual [" + actual + "]");
-            correct &= expected === actual;
-        }
-        console.log("Answer - componentWillReceiveProps: complete [" + complete + "], correct [" + correct + "]");
         this.setState({
             complete: complete,
-            correct: correct
         }, () => {
             if (complete) this.onComplete();
         });
     }
 
     onComplete() {
-        console.log("Answer - onComplete [" + this.state.correct + "]");
         this.props.onComplete({
             id: this.props.id,
             correct: this.state.correct
         });
     }
 
+    onTextAdded() {
+        this.props.onTextAdded();
+    }
 
     getBody() {
         //show instructions if no words entered

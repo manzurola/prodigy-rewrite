@@ -47,8 +47,8 @@ export default class Game extends Component {
         super(props);
         this.state = {
             questionIndex: 0,
-            answerComplete: false,
             choiceIndex: 0,
+            selectedChoiceId: 0,
             answer: [],
             progress: 0,
             score: 0,
@@ -87,25 +87,11 @@ export default class Game extends Component {
                 </View>
                 <View style={styles.separator}/>
                 <View style={styles.choicesContainer}>
-                    {this.getChoicesOrFeedback()}
+                    {this.getChoices()}
                 </View>
             </View>
         )
     }
-
-    getChoicesOrFeedback() {
-        if (this.state.answerComplete) return this.getFeedback();
-        return this.getChoices();
-    }
-
-    getFeedback() {
-        return <Feedback
-            expectedAnswer={this.getCurrentQuestion().answer}
-            actualAnswer={this.state.answer}
-            onEnd={() => this.onFeedbackEnd()}
-            onChoiceFeedback={() => this.onChoiceFeedback()}/>;
-    }
-
 
     getChoices() {
         let elements = [];
@@ -113,30 +99,22 @@ export default class Game extends Component {
         if (this.state.choiceIndex >= questionChoices.length) {
             return elements;
         }
-
-        if (this.state.playingFeedback) {
-            return [
-                // load feedback choice with word as last choice selected
-                <Choice key={i}
-                        text={this.state.answer[this.state.answer.length - 1]}
-                        feedback={this.evaluation.feedback}
-                        onPress={() => {}}/>
-            ]
-        }
-
         let currentChoices = questionChoices[this.state.choiceIndex];
         for (let i = 0; i < currentChoices.length; i++) {
             let text = currentChoices[i];
-            console.log("creating choice with word " + text);
             elements.push(<Choice key={i}
+                                  id={i}
                                   text={text}
-                                  onPress={() => this.onChoice(text)}/>);
+                                  playFeedback={this.state.selectedChoiceId === i && this.state.playingFeedback}
+                                  feedback={this.evaluation.feedback}
+                                  onFeedbackEnd={() => this.onFeedbackEnd()}
+                                  disablePress={this.state.playingFeedback}
+                                  onPress={(data) => this.onChoice(data)}/>);
             // separator
             if (i < currentChoices.length - 1) {
                 elements.push(<View style={styles.choiceSeparator}/>);
             }
         }
-
         return elements;
     }
 
@@ -146,26 +124,26 @@ export default class Game extends Component {
 
     onAnswerComplete(result) {
         console.log("Game - onAnswerComplete");
-        console.log(result);
         this.evaluateCurrentAnswer();
         this.setState({
-            answerComplete: true,
             playingFeedback: true
         });
 
         // activate chain feedback animation and reset playingFeedback when done
     }
 
-    onChoice(choice) {
+    onChoice(data) {
 
         let newAnswer = this.state.answer.slice();
-        newAnswer.push(choice);
+        newAnswer.push(data.text);
 
         console.log("new answer: " + newAnswer.toString());
 
         this.setState({
             answer: newAnswer,
-            choiceIndex: this.state.choiceIndex + 1
+            selectedChoiceId: data.id,
+            choiceIndex: this.state.choiceIndex >= this.getCurrentQuestion().choices.length - 1 ?
+                this.state.choiceIndex : this.state.choiceIndex + 1
         })
     }
 
@@ -181,14 +159,14 @@ export default class Game extends Component {
     }
 
     onFeedbackEnd() {
-        console.log("Feedback end, no setting state.answerComplete to false");
+        console.log("Feedback end, now setting state.playingFeedback to false");
         this.setState({
             questionIndex: this.state.questionIndex + 1,
             choiceIndex: 0,
-            answerComplete: false,
             answer: [],
-            progress: (this.state.questionIndex + 1) / this.props.data.length
-        })
+            progress: (this.state.questionIndex + 1) / this.props.data.length,
+            playingFeedback: false
+        });
     }
 
     onNewChoices() {
@@ -255,6 +233,8 @@ export default class Game extends Component {
             feedback: entries,
             totalScore: totalScore
         };
+
+        console.log("evaluated answer");
     }
 }
 

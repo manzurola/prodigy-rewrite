@@ -2,7 +2,7 @@
  * Created by guym on 22/08/2017.
  */
 import React, {Component} from "react";
-import {Animated, Text, TouchableHighlight} from "react-native";
+import {View, Animated, Text, TouchableHighlight} from "react-native";
 import TimerMixin from "react-timer-mixin";
 let reactMixin = require('react-mixin');
 
@@ -54,35 +54,27 @@ export default class Choice extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.playFeedback = this.props.playFeedback) return;
-
+        console.log("Choice: componentWillReceiveProps, playFeedback " + nextProps.playFeedback);
+        if (nextProps.playFeedback === this.props.playFeedback) return;
+        if (nextProps.playFeedback) {
+            this.loadFeedback();
+        } else {
+            this.resetFeedback();
+        }
     }
 
     getFeedbackCombo() {
-        if (!this.state.playingFeedback) return null;
+        if (!this.props.playFeedback) return null;
         return <Text>{this.getFeedbackEntry().combo}</Text>
     }
 
     getFeedbackText() {
-        if (!this.state.playingFeedback) return null;
+        if (!this.props.playFeedback) return null;
         return <Text>{this.getFeedbackEntry().text}</Text>
     }
 
     onPress() {
-        console.log("onPress of choice: [" + this.props.text + "]");
-        if (this.state.playingFeedback) return;
-        let playingFeedback = false;
-        if (this.hasFeedback()) {
-            this.widthAnim = new Animated.Value(230);
-            this.setState({
-                playingFeedback: true
-            }, this.loadFeedback);
-            playingFeedback = true;
-        }
-        this.props.onPress({
-            text: this.props.text,
-            playingFeedback: playingFeedback,
-        });
+        this.props.onPress({text: this.props.text, id: this.props.id});
     }
 
     hasFeedback() {
@@ -90,26 +82,46 @@ export default class Choice extends Component {
     }
 
     loadFeedback() {
+        console.log("Choice: loading feedback");
         //animate shrink choice
+        this.widthAnim = new Animated.Value(230);
         Animated.timing(
             this.widthAnim,
             {
                 toValue: 50,
-                duration: 500,
+                duration: 300,
                 // easing: Easing.linear,
             }
         ).start(() => {
             for (let i = 0; i < this.props.feedback.length; i++) {
                 this.setTimeout(() => {
-                    const isLast = i === this.elements.length - 1;
+                    const isLast = i === this.props.feedback.length - 1;
                     if (!isLast) {
                         this.setState({
-                            index: this.state.index + 1
+                            feedbackIndex: this.state.feedbackIndex + 1
                         });
-                    } else this.feedbackDidEnd();
+                    } else {
+                        this.setTimeout(() => {
+                            this.feedbackDidEnd()
+                        }, 500);
+                    }
                 }, 500 * i);
             }
         });
+    }
+
+    resetFeedback() {
+        this.widthAnim = new Animated.Value(50);
+        Animated.timing(
+            this.widthAnim,
+            {
+                toValue: 230,
+                duration: 300,
+                // easing: Easing.linear,
+            }
+        ).start(this.setState({
+            feedbackIndex: 0
+        }));
     }
 
     feedbackDidEnd() {
