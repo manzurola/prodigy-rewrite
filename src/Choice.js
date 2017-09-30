@@ -2,7 +2,7 @@
  * Created by guym on 22/08/2017.
  */
 import React, {Component} from "react";
-import {View, Animated, Text, TouchableHighlight} from "react-native";
+import {View, Animated, Easing, Text, TouchableHighlight} from "react-native";
 import TimerMixin from "react-timer-mixin";
 let reactMixin = require('react-mixin');
 
@@ -14,23 +14,25 @@ export default class Choice extends Component {
             pressed: false,
             feedbackIndex: 0,
         };
-        this.widthAnim = new Animated.Value(230);
+        this.widthAnim = new Animated.Value(200);
     }
 
 
     render() {
         return (
             <View style={styles.container}>
-                {this.getFeedbackCombo()}
+                {/*{this.getFeedbackCombo()}*/}
                 <Animated.View
                     style={[
                         styles.touchableContainer,
-                        this.state.pressed && styles.choiceContainerPressed,
-                        this.props.style,
                         {width: this.widthAnim}
                     ]}>
                     <TouchableHighlight
-                        style={styles.touchable}
+                        style={[
+                            styles.touchable,
+                            this.state.pressed && styles.touchablePressed,
+                            this.props.style,
+                        ]}
                         onPress={(event) => this.onPress(event)}
                         onHideUnderlay={() => {
                             this.setState({pressed: false})
@@ -40,15 +42,15 @@ export default class Choice extends Component {
                         }}>
                         <Text
                             style={[
-                                styles.choiceText,
-                                this.state.pressed && styles.choiceTextPressed,
+                                styles.text,
+                                this.state.pressed && styles.textPressed,
                                 this.props.textStyle
                             ]}>
                             {this.props.text}
                         </Text>
                     </TouchableHighlight>
                 </Animated.View>
-                {this.getFeedbackText()}
+                {/*{this.getFeedbackText()}*/}
             </View>
         )
     }
@@ -65,12 +67,12 @@ export default class Choice extends Component {
 
     getFeedbackCombo() {
         if (!this.props.playFeedback) return null;
-        return <Text>{this.getFeedbackEntry().combo}</Text>
+        return <Text style={styles.feedbackCombo}>{this.getFeedbackEntry().combo}</Text>
     }
 
     getFeedbackText() {
         if (!this.props.playFeedback) return null;
-        return <Text>{this.getFeedbackEntry().text}</Text>
+        return <Text style={styles.feedbackText}>{this.getFeedbackEntry().text}</Text>
     }
 
     onPress() {
@@ -89,8 +91,8 @@ export default class Choice extends Component {
             this.widthAnim,
             {
                 toValue: 50,
-                duration: 300,
-                // easing: Easing.linear,
+                duration: 170,
+                easing: Easing.elastic(1),
             }
         ).start(() => {
             for (let i = 0; i < this.props.feedback.length; i++) {
@@ -116,8 +118,8 @@ export default class Choice extends Component {
             this.widthAnim,
             {
                 toValue: 230,
-                duration: 300,
-                // easing: Easing.linear,
+                duration: 200,
+                easing: Easing.linear,
             }
         ).start(this.setState({
             feedbackIndex: 0
@@ -138,19 +140,19 @@ reactMixin(Choice.prototype, TimerMixin);
 
 const styles = {
     container: {
-        width: 230,
-        height: 50,
-        justifyContent: 'left',
+        width: 200,
+        height: 45,
+        justifyContent: 'center',
         flexDirection: 'row',
     },
     touchableContainer: {
-        width: 230,
-        height: 50,
+        // width: 204,
+        // height: 44,
     },
     touchable: {
         flex: 1,
         justifyContent: 'center',
-        borderRadius: 50 / 2,
+        borderRadius: 45 / 2,
         backgroundColor: '#434343',
         shadowColor: '#000000',
         shadowOffset: {
@@ -160,19 +162,42 @@ const styles = {
         shadowRadius: 3,
         shadowOpacity: 0.5,
     },
-    choiceContainerPressed: {},
-    choiceText: {
+    touchablePressed: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: '#434343',
+        borderRadius: 45 / 2,
+        backgroundColor: '#E3E3E3',
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 1,
+            height: 1
+        },
+        shadowRadius: 3,
+        shadowOpacity: 0.5,
+    },
+    text: {
         fontSize: 24,
         color: "#E3E3E3",
         paddingLeft: 50,
         backgroundColor: 'rgba(0,0,0,0)',
-        fontFamily: "josefin-sans-bold",
+        fontFamily: "josefin-sans-regular",
         textAlign: "left"
     },
-    choiceTextPressed: {},
+    textPressed: {
+        fontSize: 24,
+        color: "#434343",
+        paddingLeft: 50,
+        backgroundColor: 'rgba(0,0,0,0)',
+        fontFamily: "josefin-sans-regular",
+        textAlign: "left"
+    },
     choiceSeparator: {
-        height: 5,
+        height: 20,
     },
     feedbackCombo: {},
-    feedbackText: {}
+    feedbackText: {
+        marginLeft: 10,
+        backgroundColor: 'rgba(0,0,0,0)'
+    }
 };

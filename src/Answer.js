@@ -2,16 +2,7 @@
  * Created by guym on 20/08/2017.
  */
 import React, {Component} from "react";
-import {
-    View,
-    Animated,
-    PanResponder,
-    Dimensions,
-    LayoutAnimation,
-    UIManager,
-    Text,
-    TouchableHighlight
-} from "react-native";
+import {Dimensions, Text, TouchableOpacity, View} from "react-native";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -30,12 +21,12 @@ export default class Answer extends Component {
         let containerStyle = this.state.correct ? styles.correctTextContainer : styles.textContainer;
         return (
             <View style={styles.container}>
-                <TouchableHighlight style={containerStyle}
-                                    onPress={() => this.props.onPress({
-                                        id: this.props.id
-                                    })}>
+                <TouchableOpacity style={containerStyle}
+                                  onPress={() => this.props.onPress({
+                                      id: this.props.id
+                                  })}>
                     {this.getBody()}
-                </TouchableHighlight>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -80,61 +71,37 @@ export default class Answer extends Component {
 
 const styles = {
     container: {
+
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        marginBottom: 20,
+        borderBottomWidth: 1,
+        borderColor: "#5B5A62",
     },
     correctTextContainer: {
         justifyContent: 'center',
         alignItems: 'flex-start',
-        backgroundColor: 'rgba(88,86,214, 1)',
-        borderRadius: 5,
-        marginLeft: 40,
-        marginRight: 20,
-        paddingTop: 10,
-        paddingBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 1,
-            height: 1
-        },
-        shadowRadius: 3,
-        shadowOpacity: 0.5,
+        padding: 20,
     },
     textContainer: {
         justifyContent: 'center',
-        alignItems: 'flex-start',
-        backgroundColor: '#767676',
-        borderRadius: 5,
-        marginLeft: 40,
+        // alignItems: 'flex-start',
+        marginLeft: 20,
         marginRight: 20,
-        paddingTop: 10,
-        paddingBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 1,
-            height: 1
-        },
-        shadowRadius: 3,
-        shadowOpacity: 0.5,
         flexWrap: 'wrap',
+
     },
     text: {
         color: "#E3E3E3",
         backgroundColor: 'rgba(0,0,0,0)',
-        fontFamily: "josefin-sans-bold",
+        fontFamily: "josefin-sans-regular",
         fontSize: 20,
         textAlign: "left",
         lineHeight: 30,
     },
     instructionText: {
-        color: "#E3E3E3",
-        fontFamily: "josefin-sans-light-italic",
-        fontSize: 20,
+        color: "#5B5A62",
+        fontFamily: "josefin-sans-bold",
+        fontSize: 24,
         textAlign: "left",
         lineHeight: 30,
     },

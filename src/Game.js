@@ -3,16 +3,7 @@
  */
 import React, {Component} from "react";
 import {
-    AppRegistry,
-    StyleSheet,
-    Text,
     View,
-    Image,
-    TextInput,
-    ScrollView,
-    ListView,
-    TouchableHighlight,
-    TouchableWithoutFeedback,
     Dimensions,
     LayoutAnimation,
     UIManager
@@ -22,8 +13,9 @@ import ProgressBar from "./ProgressBar";
 import Sentence from "./Sentence";
 import Answer from "./Answer";
 import Choice from "./Choice";
-import Feedback from "./Feedback";
+import AnswerCompleteFeedback from "./AnswerCompleteFeedback";
 let reactMixin = require('react-mixin');
+import { LinearGradient } from 'expo';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -41,6 +33,37 @@ const CustomLayoutSpring = {
     },
 };
 
+const CustomLayoutLinear = {
+    duration: 500,
+    create: {
+        type: LayoutAnimation.Types.spring,
+        property: LayoutAnimation.Properties.scaleXY,
+        springDamping: 0.5,
+    },
+    update: {
+        type: LayoutAnimation.Types.spring,
+        property: LayoutAnimation.Properties.scaleXY,
+        springDamping: 0.5,
+    },
+    // delete: {
+    //     type: LayoutAnimation.Types.curveEaseInEaseOut,
+    //     property: LayoutAnimation.Properties.opacity,
+    // },
+};
+
+const springAnimationProperties = {
+    type: 'spring',
+    springDamping: 0.4,
+    property: 'opacity',
+};
+
+const animationConfig = {
+    duration: 300,
+    create: springAnimationProperties,
+    update: springAnimationProperties,
+    delete: springAnimationProperties,
+};
+
 export default class Game extends Component {
 
     constructor(props) {
@@ -54,6 +77,7 @@ export default class Game extends Component {
             score: 0,
             combo: 0,
             playingFeedback: false,
+            showChoices: false,
         };
         this.evaluation = {};
     }
@@ -61,23 +85,34 @@ export default class Game extends Component {
     componentWillUpdate() {
         UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
         // LayoutAnimation.spring();
-        LayoutAnimation.configureNext(CustomLayoutSpring);
+        LayoutAnimation.configureNext(CustomLayoutLinear);
     }
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, {
+                bottom: this.state.showChoices ? (SCREEN_HEIGHT / 10) * 2 : 0
+            }]}>
                 <View style={{
                     height: SCREEN_HEIGHT / 10,
                 }}>
                     <ProgressBar progress={this.state.progress} barWidth={SCREEN_WIDTH * 4 / 5}/>
                 </View>
                 <View style={{
-                    height: (SCREEN_HEIGHT / 10) * 6,
-                    padding: 10,
-                    justifyContent: 'flex-end',
+                    height: (SCREEN_HEIGHT / 10) * 5,
                 }}>
+                    {/*<LinearGradient*/}
+                        {/*colors={['rgba(0,0,0,0.8)', 'transparent']}*/}
+                        {/*style={{*/}
+                            {/*flex: 1*/}
+                        {/*}}*/}
+                    {/*>*/}
                     <Sentence text={this.getCurrentQuestion().sentence}/>
+                    {/*</LinearGradient>*/}
+                </View>
+                <View style={{
+                    height: (SCREEN_HEIGHT / 10) * 4,
+                }}>
                     <Answer answer={this.getCurrentQuestion().answer}
                             input={this.state.answer}
                             instructions={this.getCurrentQuestion().instructions}
@@ -85,11 +120,23 @@ export default class Game extends Component {
                             onComplete={(result) => this.onAnswerComplete(result)}
                     />
                 </View>
-                <View style={styles.separator}/>
-                <View style={styles.choicesContainer}>
-                    {this.getChoices()}
+                <View style={{
+                    height: (SCREEN_HEIGHT / 10) * 3,
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    {this.state.showChoices ? this.getChoices() : null}
                 </View>
             </View>
+        )
+    }
+
+    getAnswerCompleteFeedback() {
+        return (
+            <AnswerCompleteFeedback style={{
+                width: SCREEN_WIDTH
+            }}/>
         )
     }
 
@@ -118,18 +165,38 @@ export default class Game extends Component {
         return elements;
     }
 
-    onAnswerPress() {
-        if (this.state.answer.length != 0) this.undoLastChoice();
-    }
-
     onAnswerComplete(result) {
         console.log("Game - onAnswerComplete");
         this.evaluateCurrentAnswer();
         this.setState({
-            playingFeedback: true
+            playingFeedback: true,
+            answerComplete: true,
         });
 
         // activate chain feedback animation and reset playingFeedback when done
+        this.timeoutClearId = this.setTimeout(() => {
+            this.progress();
+        }, 1000);
+    }
+
+    progress() {
+        console.log("progressing to next question or level completed");
+        this.clearTimeout(this.timeoutClearId); // clear timeout if this func is triggered by a press
+        this.setState({
+            questionIndex: this.getNextQuestion(),
+            choiceIndex: 0,
+            answer: [],
+            progress: (this.state.questionIndex + 1) / this.props.data.length,
+            playingFeedback: false,
+            answerComplete: false,
+        });
+    }
+
+    getNextQuestion() {
+        let total = this.props.data.length;
+        let current = this.state.questionIndex;
+        let next = current + 1;
+        return next < total ? next : 0;
     }
 
     onChoice(data) {
@@ -139,16 +206,24 @@ export default class Game extends Component {
 
         console.log("new answer: " + newAnswer.toString());
 
+        let totalChoices = this.getCurrentQuestion().choices.length;
+        let currentChoice = this.state.choiceIndex;
+        let nextChoice = currentChoice + 1;
+
         this.setState({
             answer: newAnswer,
             selectedChoiceId: data.id,
-            choiceIndex: this.state.choiceIndex >= this.getCurrentQuestion().choices.length - 1 ?
-                this.state.choiceIndex : this.state.choiceIndex + 1
+            choiceIndex: nextChoice < totalChoices ? nextChoice : currentChoice
         })
     }
 
-    undoLastChoice() {
-        console.log("undoLastChoice");
+    onAnswerPress() {
+        if (this.state.answer.length === 0) {
+            this.setState({
+                showChoices: true,
+            });
+            return;
+        }
         let newAnswer = this.state.answer.slice();
         let popped = newAnswer.pop();
         console.log("deleting last word in answer [" + popped + " ]");
@@ -243,7 +318,7 @@ reactMixin(Game.prototype, TimerMixin);
 const styles = {
     container: {
         flex: 1,
-        backgroundColor: "#E3E3E3",
+        backgroundColor: "white",
     },
     separator: {
         height: 1,
@@ -253,12 +328,11 @@ const styles = {
         backgroundColor: "#B2B2B2"
     },
     choicesContainer: {
-        height: (SCREEN_HEIGHT / 10) * 3,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
     choiceSeparator: {
-        height: 5,
+        height: 10,
     }
 };

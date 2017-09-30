@@ -22,31 +22,23 @@ export default class Sentence extends Component {
 
 const styles = {
     container: {
-        // height: 50,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        marginBottom:20,
+        marginBottom: 10,
+        flex: 1,
     },
     textContainer: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'flex-start',
-        backgroundColor: '#B2B2B2',
-        borderRadius: 5,
-        marginLeft: 20,
-        marginRight: 40,
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 1,
-            height: 1
-        },
-        shadowRadius: 3,
-        shadowOpacity: 0.5,
+        backgroundColor: '#A09DB0',
         padding: 20,
+        borderBottomWidth: 5,
+        borderTopWidth: 5,
+        borderColor: '#CFCDD7',
     },
     text: {
-        color: "#434343",
-        fontFamily: "josefin-sans-bold",
-        fontSize: 20,
+        color: "white",
+        fontFamily: "josefin-sans-regular",
+        fontSize: 30,
         textAlign: "left",
         lineHeight: 30,
         letterSpacing: 0.2

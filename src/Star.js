@@ -2,7 +2,7 @@
  * Created by guym on 29/07/2017.
  */
 import React, {Component} from "react";
-import {View, Animated, PanResponder, Dimensions, LayoutAnimation, UIManager, Text} from "react-native";
+import {View, Animated} from "react-native";
 import {FontAwesome} from "@expo/vector-icons";
 
 export default class Star extends Component {
@@ -15,15 +15,15 @@ export default class Star extends Component {
         return (
             <Animated.View style={[this.props.style]}>
                 <FontAwesome name="star" size={this.props.size} color={this.props.color}
-                style={{
-                    shadowColor: '#000000',
-                    shadowOffset: {
-                        width: 1,
-                        height: 1
-                    },
-                    shadowRadius: 3,
-                    shadowOpacity: 0.5,
-                }}/>
+                             style={{
+                                 shadowColor: '#000000',
+                                 shadowOffset: {
+                                     width: 1,
+                                     height: 1
+                                 },
+                                 shadowRadius: 3,
+                                 shadowOpacity: 0.5,
+                             }}/>
             </Animated.View>
         )
     }
