@@ -1,6 +1,10 @@
 import React, {Component} from "react";
 import {Text, TouchableWithoutFeedback, View} from "react-native";
 import TextButton from "./TextButton";
+import TimerMixin from "react-timer-mixin";
+import Appear from "./Appear";
+
+let reactMixin = require('react-mixin');
 
 export default class MultiChoiceAnswerInput extends Component {
 
@@ -29,7 +33,7 @@ export default class MultiChoiceAnswerInput extends Component {
                 choices[i].push(word);
             }
         }
-
+        console.log(choices);
         this.choices = choices;
     }
 
@@ -64,29 +68,28 @@ export default class MultiChoiceAnswerInput extends Component {
     }
 
     onAnswerChange() {
-        let newIndex = this.state.answer.length;
-        let lastIndex = this.choices.length - 1;
-
-        this.setState({
-            index:  newIndex <= lastIndex ? newIndex : lastIndex
-        }, () => this.props.onAnswerChange(this.getInputText()));
+        this.props.onAnswerChange(this.getInputText());
     }
 
     pushWord(text) {
         let input = this.state.answer.slice();
         input.push(text);
-        this.setState({
-            isEmpty: false,
-            answer: input
-        }, this.onAnswerChange);
+        this.setAnswer(input);
     }
 
     popWord() {
         let input = this.state.answer.slice();
         input.pop();
+        this.setAnswer(input);
+    }
+
+    setAnswer(input) {
+        let newIndex = input.length;
+        let lastIndex = this.choices.length - 1;
         this.setState({
             isEmpty: input.length === 0,
-            answer: input
+            answer: input,
+            index: newIndex <= lastIndex ? newIndex : lastIndex
         }, this.onAnswerChange);
     }
 
@@ -104,10 +107,12 @@ export default class MultiChoiceAnswerInput extends Component {
 
     getTextButton(i) {
         let text = this.choices[i][this.state.index];
-        return <TextButton
-            text={text}
-            onPress={() => this.onButtonPress(text)}
-        />
+        return <Appear timeout={(i+1)  * 150}>
+            <TextButton
+                text={text}
+                onPress={() => this.onButtonPress(text)}
+            />
+        </Appear>
     }
 
     getPlaceholderText() {
@@ -123,6 +128,7 @@ export default class MultiChoiceAnswerInput extends Component {
         return <Text style={styles.inputText}>{text}</Text>
     }
 }
+reactMixin(MultiChoiceAnswerInput.prototype, TimerMixin);
 
 const styles = {
     container: {

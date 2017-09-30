@@ -15,16 +15,13 @@ export default class TextButton extends Component {
             chars: []
         };
 
-        let chars = this.getChars(props.text);
+        let chars = this.createCharsFromText(props.text);
         this.state.chars = chars;
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.chars !== this.props.text) {
-            let chars = this.getChars(nextProps.text);
-            this.setState({
-                chars: chars
-            })
+        if (nextProps.text !== this.props.text) {
+            this.setCharsFromText(nextProps.text);
         }
     }
 
@@ -54,7 +51,17 @@ export default class TextButton extends Component {
         this.props.onPress();
     }
 
-    getChars(value) {
+    setCharsFromText(value) {
+        this.setState({
+            pressed: false
+        }, ()=> {
+            this.setState({
+                chars: this.createCharsFromText(value)
+            })
+        })
+    }
+
+    createCharsFromText(value) {
         let chars = [];
         for (let i = 0; i < value.length; i++) {
             let char = value[i];
@@ -63,7 +70,7 @@ export default class TextButton extends Component {
                     styles.text,
                     this.state.pressed && styles.textPressed,
                     !!this.props.textStyle,
-                    this.state.pressed && this.props.textPressedStyle,
+                    this.state.pressed && !!this.props.textPressedStyle,
                 ]}>
                     {char}
                 </UIText>
@@ -76,7 +83,7 @@ reactMixin(TextButton.prototype, TimerMixin);
 
 const styles = {
     container: {
-        width: 200,
+        // width: 200,
         height: 45,
         alignItems: 'center',
         justifyContent: 'center',
@@ -100,7 +107,7 @@ const styles = {
         color: "#E3E3E3",
     },
     textPressed: {
-        color: "#434343",
+        color: "black",
     },
     textContainer: {
         flex: 1,
