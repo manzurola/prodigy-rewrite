@@ -65,13 +65,12 @@ export default class Answer extends Component {
             text += " " + this.props.input[i];
         }
 
-        return <Text style={styles.text}>{text}</Text>;
+        return <Text style={styles.chars}>{text}</Text>;
     }
 }
 
 const styles = {
     container: {
-
         flexDirection: 'row',
         justifyContent: 'flex-start',
         borderBottomWidth: 1,

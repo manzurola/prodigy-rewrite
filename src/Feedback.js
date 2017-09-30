@@ -83,7 +83,7 @@ export default class Feedback extends Component {
         return [
             <FeedbackCombo style={styles.combo} count={entry.combo}/>,
             <Choice style={styles.icon} text="" type={entry.result}/>,
-            <FeedbackText style={styles.text} text={entry.text}/>
+            <FeedbackText style={styles.chars} text={entry.chars}/>
         ];
     }
 
@@ -164,7 +164,7 @@ class FeedbackText extends Component {
     render() {
         return (
             <Animated.View>
-                <Text>{this.props.text}</Text>
+                <Text>{this.props.chars}</Text>
             </Animated.View>
         )
     }

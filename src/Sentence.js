@@ -13,7 +13,7 @@ export default class Sentence extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.textContainer}>
-                    <Text style={styles.text}>{this.props.text}</Text>
+                    <Text style={styles.chars}>{this.props.chars}</Text>
                 </View>
             </View>
         )

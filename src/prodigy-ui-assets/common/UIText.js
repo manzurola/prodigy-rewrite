@@ -5,7 +5,7 @@ export default class UIText extends Component {
 
     render() {
         return (
-            <Text style={[this.props.style, styles.text]}>
+            <Text style={[styles.text, this.props.style]}>
                 {this.props.children}
             </Text>
         )
@@ -14,10 +14,8 @@ export default class UIText extends Component {
 
 const styles = {
     text: {
-        flex: 1,
-        color: "#5B5A62",
-        textAlign: "left",
+        color: "#000000",
         fontFamily: "josefin-sans-regular",
-        fontSize: 20,
+        fontSize: 17,
     }
 };

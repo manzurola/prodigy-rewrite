@@ -15,10 +15,15 @@ export default class TransformActivity extends Component {
                     <MultiChoiceAnswerInput
                         style={styles.answer}
                         choices={this.props.choices}
-                        placeholderText={this.props.instructions}/>
+                        placeholderText={this.props.instructions}
+                        onAnswerChange={(newAnswer)=> this.onAnswerChange(newAnswer)}/>
                 </Block>
             </View>
         )
+    }
+
+    onAnswerChange(newAnswer) {
+        console.log("evaluating answer [" + newAnswer + "]");
     }
 }
 
@@ -27,14 +32,14 @@ class Answer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isEmpty: props.text || false
+            isEmpty: props.chars || false
         }
     }
 
     render() {
         return (
             <View style={[this.props.style, styles.container]}>
-                {this.state.isEmpty ? <Text>{this.props.placeholderText}</Text> : <Text>{this.props.text}</Text>}
+                {this.state.isEmpty ? <Text>{this.props.placeholderText}</Text> : <Text>{this.props.chars}</Text>}
             </View>
         )
     }
@@ -47,9 +52,13 @@ const styles = {
         justifyContent: 'center',
     },
     block: {
-        height: 200,
         width: 320,
     },
-    targetSentenceText: {},
+    targetSentenceText: {
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 50,
+        paddingBottom: 50,
+    },
     answer: {}
 };

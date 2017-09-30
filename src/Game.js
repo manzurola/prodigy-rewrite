@@ -202,7 +202,7 @@ export default class Game extends Component {
     onChoice(data) {
 
         let newAnswer = this.state.answer.slice();
-        newAnswer.push(data.text);
+        newAnswer.push(data.chars);
 
         console.log("new answer: " + newAnswer.toString());
 

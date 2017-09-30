@@ -30,7 +30,7 @@ export default class Choice extends Component {
                     <TouchableHighlight
                         style={[
                             styles.touchable,
-                            this.state.pressed && styles.touchablePressed,
+                            this.state.pressed && styles.pressed,
                             this.props.style,
                         ]}
                         onPress={(event) => this.onPress(event)}
@@ -42,11 +42,11 @@ export default class Choice extends Component {
                         }}>
                         <Text
                             style={[
-                                styles.text,
+                                styles.chars,
                                 this.state.pressed && styles.textPressed,
                                 this.props.textStyle
                             ]}>
-                            {this.props.text}
+                            {this.props.chars}
                         </Text>
                     </TouchableHighlight>
                 </Animated.View>
@@ -72,11 +72,11 @@ export default class Choice extends Component {
 
     getFeedbackText() {
         if (!this.props.playFeedback) return null;
-        return <Text style={styles.feedbackText}>{this.getFeedbackEntry().text}</Text>
+        return <Text style={styles.feedbackText}>{this.getFeedbackEntry().chars}</Text>
     }
 
     onPress() {
-        this.props.onPress({text: this.props.text, id: this.props.id});
+        this.props.onPress({text: this.props.chars, id: this.props.id});
     }
 
     hasFeedback() {
@@ -162,7 +162,7 @@ const styles = {
         shadowRadius: 3,
         shadowOpacity: 0.5,
     },
-    touchablePressed: {
+    pressed: {
         flex: 1,
         borderWidth: 1,
         borderColor: '#434343',

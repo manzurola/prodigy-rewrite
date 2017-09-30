@@ -16,7 +16,7 @@ export default class AnswerCompleteFeedback extends Component {
         return (
             <Animated.View style={[styles.container, this.props.style]}>
                 <CheckMark/>
-                <Text style={styles.text}>{"Correct Answer!"}</Text>
+                <Text style={styles.chars}>{"Correct Answer!"}</Text>
             </Animated.View>
         )
     }

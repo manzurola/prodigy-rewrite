@@ -16,7 +16,7 @@ const styles = {
     container: {
         backgroundColor: "#ffffff",
         borderRadius: 10,
-        // overflow: 'hidden',
+        overflow: 'hidden',
         margin: 10,
         shadowColor: '#A09DB0',
         shadowOffset: {

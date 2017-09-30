@@ -10,7 +10,7 @@ export default class Danger extends Feedback {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.text}>{this.props.text}</Text>
+                <Text style={styles.chars}>{this.props.chars}</Text>
             </View>
         )
     }

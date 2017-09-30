@@ -180,7 +180,7 @@ class Choice extends Component {
                                 onHideUnderlay={()=>{this.setState({pressed: false})}}
                                 onShowUnderlay={()=>{this.setState({pressed: true})}}
             >
-                <Text style={this.state.pressed ? STYLES.textPressed: STYLES.text}>{this.props.text}</Text>
+                <Text style={this.state.pressed ? STYLES.textPressed: STYLES.chars}>{this.props.chars}</Text>
             </TouchableHighlight>
         )
     }

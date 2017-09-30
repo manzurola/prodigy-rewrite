@@ -9,7 +9,7 @@ export default class MultiChoiceAnswerInput extends Component {
         this.state = {
             isEmpty: true,
             index: 0,
-            input: [],
+            answer: [],
             showChoices: props.showChoices || false
         };
 
@@ -35,7 +35,7 @@ export default class MultiChoiceAnswerInput extends Component {
 
     render() {
         return (
-            <View style={[this.props.style, styles.container]}>
+            <View style={[styles.container, this.props.style]}>
                 <TouchableWithoutFeedback onPress={() => {
                     this.onInputPress();
                 }}>
@@ -48,7 +48,7 @@ export default class MultiChoiceAnswerInput extends Component {
         )
     }
 
-    // show choices or delete last word in input
+    // show choices or delete last word in answer
     onInputPress() {
         if (!this.state.isEmpty) {
             this.popWord();
@@ -57,30 +57,37 @@ export default class MultiChoiceAnswerInput extends Component {
         }
     }
 
-    // append word to input
+    // append word to answer
     onButtonPress(text) {
         console.log("Button pressed [" + text + "]");
         this.pushWord(text);
     }
 
-    onTextChange() {
-        this.props.onTextChange(this.getInputText());
+    onAnswerChange() {
+        let newIndex = this.state.answer.length;
+        let lastIndex = this.choices.length - 1;
+
+        this.setState({
+            index:  newIndex <= lastIndex ? newIndex : lastIndex
+        }, () => this.props.onAnswerChange(this.getInputText()));
     }
 
     pushWord(text) {
-        let input = this.state.input.slice();
+        let input = this.state.answer.slice();
         input.push(text);
         this.setState({
-            input: input
-        }, this.onTextChange);
+            isEmpty: false,
+            answer: input
+        }, this.onAnswerChange);
     }
 
     popWord() {
-        let input = this.state.input.slice();
+        let input = this.state.answer.slice();
         input.pop();
         this.setState({
-            input: input
-        }, this.onTextChange);
+            isEmpty: input.length === 0,
+            answer: input
+        }, this.onAnswerChange);
     }
 
     showChoices() {
@@ -108,10 +115,10 @@ export default class MultiChoiceAnswerInput extends Component {
     }
 
     getInputText() {
-        let {input} = this.state;
-        let text = input[0];
-        for (let i = 1; i < input.length; i++) {
-            text += " " + input[i];
+        let {answer} = this.state;
+        let text = answer[0];
+        for (let i = 1; i < answer.length; i++) {
+            text += " " + answer[i];
         }
         return <Text style={styles.inputText}>{text}</Text>
     }
@@ -119,8 +126,8 @@ export default class MultiChoiceAnswerInput extends Component {
 
 const styles = {
     container: {
-        flex: 1,
-        backgroundColor: "#CFCDD7",
+        backgroundColor: "transparent",
+        padding: 20,
     },
     placeholderText: {},
     inputText: {},
