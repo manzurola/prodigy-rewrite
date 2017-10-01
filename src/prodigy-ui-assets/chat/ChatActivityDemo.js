@@ -3,7 +3,7 @@ import Background from "../common/Background";
 import TransformActivity from "../activities/TransformActivity";
 import ChatActivity from "./ChatActivity";
 
-class TransformActivityDemo extends Component {
+class ChatActivityDemo extends Component {
     render () {
         return (
             <Background>
@@ -13,7 +13,7 @@ class TransformActivityDemo extends Component {
     }
 }
 
-export default TransformActivityDemo;
+export default ChatActivityDemo;
 
 let data ={
     instructions: "Put into the plural",
@@ -23,7 +23,7 @@ let data ={
         "Dogs is a cute",
         // "Dog are cute",
         "Dogs are cute",
-        "A dogs are cute"
+        "A dogs are"
     ]
 
 };

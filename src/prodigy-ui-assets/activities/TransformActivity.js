@@ -4,6 +4,7 @@ import HorizontalSeparator from "../common/HorizontalSeparator";
 import Block from "../common/Block";
 import UIText from "../common/UIText";
 import MultiChoiceAnswerInput from "../common/MultiChoiceAnswerInput";
+import ColorPalette from "../chat/ColorPalette";
 
 const CustomLayoutLinear = {
     duration: 500,
