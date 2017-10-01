@@ -10,12 +10,12 @@ const CustomLayoutLinear = {
     create: {
         type: LayoutAnimation.Types.spring,
         property: LayoutAnimation.Properties.scaleXY,
-        springDamping: 0.5,
+        springDamping: 5,
     },
     update: {
         type: LayoutAnimation.Types.spring,
         property: LayoutAnimation.Properties.scaleXY,
-        springDamping: 0.5,
+        springDamping: 5,
     },
     // delete: {
     //     type: LayoutAnimation.Types.curveEaseInEaseOut,
@@ -23,23 +23,19 @@ const CustomLayoutLinear = {
     // },
 };
 
-export default class TransformActivity extends Component {
+export default class ChatActivity extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Block style={styles.block}>
-                    <Block>
-                        <UIText style={styles.targetSentenceText}>{this.props.targetSentence}</UIText>
-                    </Block>
-                    <HorizontalSeparator/>
-                    <Block>
-                        <MultiChoiceAnswerInput
-                            style={styles.answer}
-                            choices={this.props.choices}
-                            placeholderText={this.props.instructions}
-                            onAnswerChange={(newAnswer) => this.onAnswerChange(newAnswer)}/>
-                    </Block>
+                <Block>
+                    <UIText style={styles.targetSentenceText}>{this.props.targetSentence}</UIText>
                 </Block>
+                <HorizontalSeparator/>
+                <MultiChoiceAnswerInput
+                    style={styles.answer}
+                    choices={this.props.choices}
+                    placeholderText={this.props.instructions}
+                    onAnswerChange={(newAnswer) => this.onAnswerChange(newAnswer)}/>
             </View>
         )
     }
@@ -47,14 +43,14 @@ export default class TransformActivity extends Component {
     componentWillUpdate() {
         UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
         // LayoutAnimation.spring();
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+        LayoutAnimation.configureNext(CustomLayoutLinear);
     }
 
     onAnswerChange(newAnswer) {
         console.log("evaluating answer [" + newAnswer + "]");
         UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
         // LayoutAnimation.spring();
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+        LayoutAnimation.configureNext(CustomLayoutLinear);
     }
 }
 
@@ -62,7 +58,7 @@ const styles = {
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
     },
     block: {
         // width: 320,

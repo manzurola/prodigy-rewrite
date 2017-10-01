@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Text} from "react-native";
 
-export default class UIText extends Component {
+export default class UIText extends Text {
 
     render() {
         return (
@@ -15,7 +15,7 @@ export default class UIText extends Component {
 const styles = {
     text: {
         color: "#000000",
-        fontFamily: "josefin-sans-regular",
-        fontSize: 17,
+        // fontFamily: "josefin-sans-regular",
+        fontSize: 20,
     }
 };

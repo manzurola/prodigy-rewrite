@@ -6,7 +6,7 @@ export default class Block extends Component {
     render() {
         return (
             <View style={[styles.container, this.props.style]}>
-                {this.props.children}
+                <View style={styles.children}>{this.props.children}</View>
             </View>
         )
     }
@@ -15,15 +15,18 @@ export default class Block extends Component {
 const styles = {
     container: {
         backgroundColor: "#ffffff",
-        borderRadius: 10,
-        overflow: 'hidden',
+        borderRadius: 0,
         margin: 10,
-        shadowColor: '#A09DB0',
-        shadowOffset: {
-            width: 0,
-            height: 7
-        },
-        shadowRadius: 3,
-        shadowOpacity: 1,
+        // shadowColor: '#89818D',
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 7
+        // },
+        // shadowRadius: 3,
+        // shadowOpacity: 1,
+    },
+    children: {
+        borderRadius: 1,
+        overflow: 'hidden',
     }
 };

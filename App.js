@@ -1,14 +1,31 @@
 import React from "react";
-import {StatusBar, StyleSheet, View} from "react-native";
+import {LayoutAnimation, StyleSheet, UIManager, View} from "react-native";
 import {Font} from 'expo';
 import {TabNavigator} from 'react-navigation';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import AuthScreen from './src/screens/AuthScreen';
 import LessonScreen from './src/screens/LessonScreen';
-
-import Game from './src/Game';
-import GameData from './src/GameData';
 import TransformActivityDemo from "./src/prodigy-ui-assets/activities/TransformActivityDemo";
+import ChatActivityDemo from "./src/prodigy-ui-assets/chat/ChatActivityDemo";
+
+
+const CustomLayoutLinear = {
+    duration: 500,
+    create: {
+        type: LayoutAnimation.Types.spring,
+        property: LayoutAnimation.Properties.scaleXY,
+        springDamping: 0.5,
+    },
+    update: {
+        type: LayoutAnimation.Types.spring,
+        property: LayoutAnimation.Properties.scaleXY,
+        springDamping: 0.5,
+    },
+    // delete: {
+    //     type: LayoutAnimation.Types.curveEaseInEaseOut,
+    //     property: LayoutAnimation.Properties.opacity,
+    // },
+};
 
 export default class App extends React.Component {
 
@@ -45,7 +62,7 @@ export default class App extends React.Component {
         });
         return (
             <View style={styles.container}>
-                <TransformActivityDemo/>
+                {this.state.fontLoaded ? (<ChatActivityDemo/>) : null}
                 {/*<StatusBar hidden={true}/>*/}
                 {/*{*/}
                 {/*this.state.fontLoaded ? (<Game data={GameData}/>) : null*/}

@@ -20,9 +20,10 @@ export default class TextButton extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.text !== this.props.text) {
-            this.setCharsFromText(nextProps.text);
-        }
+        this.setCharsFromText(nextProps.text);
+        // if (nextProps.text !== this.props.text) {
+        //     this.setCharsFromText(nextProps.text);
+        // }
     }
 
     render() {
@@ -54,7 +55,7 @@ export default class TextButton extends Component {
     setCharsFromText(value) {
         this.setState({
             pressed: false
-        }, ()=> {
+        }, () => {
             this.setState({
                 chars: this.createCharsFromText(value)
             })
@@ -65,16 +66,18 @@ export default class TextButton extends Component {
         let chars = [];
         for (let i = 0; i < value.length; i++) {
             let char = value[i];
-            chars.push(<FadeIn delay={30 * i}>
-                <UIText style={[
-                    styles.text,
-                    this.state.pressed && styles.textPressed,
-                    !!this.props.textStyle,
-                    this.state.pressed && !!this.props.textPressedStyle,
-                ]}>
-                    {char}
-                </UIText>
-            </FadeIn>)
+            chars.push(
+                <FadeIn delay={30 * i}>
+                    <UIText style={[
+                        styles.text,
+                        this.state.pressed && styles.textPressed,
+                        !!this.props.textStyle,
+                        this.state.pressed && !!this.props.textPressedStyle,
+                    ]}>
+                        {char}
+                    </UIText>
+                </FadeIn>
+            )
         }
         return chars;
     }
@@ -88,23 +91,15 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
-        borderRadius: 45 / 2,
-        backgroundColor: '#434343',
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 1,
-            height: 1
-        },
-        shadowRadius: 3,
-        shadowOpacity: 0.5,
+        // borderRadius: 45 / 2,
     },
     pressed: {
-        backgroundColor: '#E3E3E3',
+        backgroundColor: 'transparent',
     },
     text: {
         // borderWidth: 5,
         fontSize: 17,
-        color: "#E3E3E3",
+        color: "black",
     },
     textPressed: {
         color: "black",

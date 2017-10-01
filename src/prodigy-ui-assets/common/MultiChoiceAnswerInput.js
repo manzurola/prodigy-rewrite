@@ -1,10 +1,13 @@
 import React, {Component} from "react";
-import {Text, TouchableWithoutFeedback, View} from "react-native";
+import {Dimensions, TouchableOpacity, View} from "react-native";
 import TextButton from "./TextButton";
 import TimerMixin from "react-timer-mixin";
-import Appear from "./Appear";
+import UIText from "./UIText";
 
 let reactMixin = require('react-mixin');
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export default class MultiChoiceAnswerInput extends Component {
 
@@ -40,14 +43,18 @@ export default class MultiChoiceAnswerInput extends Component {
     render() {
         return (
             <View style={[styles.container, this.props.style]}>
-                <TouchableWithoutFeedback onPress={() => {
-                    this.onInputPress();
-                }}>
+                <TouchableOpacity style={styles.input}
+                                  onPress={() => {
+                                      this.onInputPress();
+                                  }}>
                     {this.state.isEmpty ? this.getPlaceholderText() : this.getInputText()}
-                </TouchableWithoutFeedback>
-                <View style={styles.buttonContainer}>
-                    {this.state.showChoices && [this.getTextButton(0), this.getTextButton(1), this.getTextButton(2)]}
-                </View>
+                </TouchableOpacity>
+                {
+                    !this.state.showChoices ? null :
+                        <View style={[styles.choiceContainer]}>
+                            {[this.getTextButton(0), this.getTextButton(1), this.getTextButton(2)]}
+                        </View>
+                }
             </View>
         )
     }
@@ -58,12 +65,12 @@ export default class MultiChoiceAnswerInput extends Component {
             this.popWord();
         } else {
             !this.state.showChoices && this.showChoices();
+            this.onAnswerChange();
         }
     }
 
     // append word to answer
     onButtonPress(text) {
-        console.log("Button pressed [" + text + "]");
         this.pushWord(text);
     }
 
@@ -94,9 +101,11 @@ export default class MultiChoiceAnswerInput extends Component {
     }
 
     showChoices() {
+        console.log("showing choices");
         this.setState({
             showChoices: true
-        })
+        }, () => {
+        });
     }
 
     hideChoices() {
@@ -107,16 +116,21 @@ export default class MultiChoiceAnswerInput extends Component {
 
     getTextButton(i) {
         let text = this.choices[i][this.state.index];
-        return <Appear timeout={(i+1)  * 150}>
-            <TextButton
-                text={text}
-                onPress={() => this.onButtonPress(text)}
-            />
-        </Appear>
+        return <TextButton
+            style={styles.button}
+            text={text}
+            onPress={() => this.onButtonPress(text)}
+        />;
+        // return <Appear timeout={(i+1)  * 150}>
+        //     <TextButton
+        //         text={text}
+        //         onPress={() => this.onButtonPress(text)}
+        //     />
+        // </Appear>
     }
 
     getPlaceholderText() {
-        return <Text style={styles.placeholderText}>{this.props.placeholderText}</Text>
+        return <UIText style={styles.placeholderText}>{this.props.placeholderText}</UIText>
     }
 
     getInputText() {
@@ -125,17 +139,40 @@ export default class MultiChoiceAnswerInput extends Component {
         for (let i = 1; i < answer.length; i++) {
             text += " " + answer[i];
         }
-        return <Text style={styles.inputText}>{text}</Text>
+        return <UIText style={styles.inputText}>{text}</UIText>
     }
 }
 reactMixin(MultiChoiceAnswerInput.prototype, TimerMixin);
 
 const styles = {
     container: {
-        backgroundColor: "transparent",
-        padding: 20,
+        backgroundColor: "white",
+        shadowColor: 'black',
+        shadowOffset: {
+            width: 0,
+            height: -3
+        },
+        shadowRadius: 3,
+        shadowOpacity: 0.5,
     },
-    placeholderText: {},
+    input: {
+        width: SCREEN_WIDTH,
+        minHeight: 70,
+        paddingLeft: 30,
+        alignItems: 'start',
+        justifyContent: 'center',
+    },
+    placeholderText: {
+        // flex: 1,
+    },
     inputText: {},
-    buttonContainer: {}
+    choiceContainer: {
+        width: SCREEN_WIDTH,
+        height: 200,
+        flexDirection: 'row'
+    },
+    button: {
+        width: SCREEN_WIDTH / 3,
+        borderRadius: 0,
+    }
 };
